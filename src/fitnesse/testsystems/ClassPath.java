@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.Logger;import java.util.stream.Collectors;
 
 public class ClassPath {
 
@@ -33,12 +33,7 @@ public class ClassPath {
     this.separator = paths.get(0).getSeparator();
 
     for (ClassPath path : paths) {
-      for (String element : path.getElements()) {
-        if (!elements.contains(element)) {
-          elements.add(element);
-        }
-      }
-    }
+      elements  = path.getElements().stream().filter(element -> !elements.contains(element)).collect(Collectors.toList());}
   }
 
   public ClassPath withLocationForClass(String testRunner) {
