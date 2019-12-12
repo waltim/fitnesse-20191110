@@ -23,12 +23,7 @@ import fitnesse.wiki.XmlizePageCondition;
 import org.w3c.dom.Document;
 
 public class SerializedPageResponder implements SecureResponder {
-  private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {
-    @Override
-    public boolean canBeXmlized(WikiPage page) {
-      return !(page instanceof SymbolicPage);
-    }
-  };
+  private XmlizePageCondition xmlizePageCondition = page -> !(page instanceof SymbolicPage);
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {

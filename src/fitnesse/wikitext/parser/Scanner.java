@@ -13,12 +13,7 @@ public class Scanner {
     public Scanner(SourcePage sourcePage, CharSequence input) {
         this(
             new TextMaker(
-                new VariableSource() {
-                        @Override
-                        public Maybe<String> findVariable(String name) {
-                            return Maybe.noString;
-                        }
-                },
+              name -> Maybe.noString,
                 sourcePage),
             input);
     }

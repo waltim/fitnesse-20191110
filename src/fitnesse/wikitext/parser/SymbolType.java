@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolType implements Matchable {
-    private static final Rule defaultRule = new Rule() {
-        @Override
-        public Maybe<Symbol> parse(Symbol current, Parser parser) {
-            return new Maybe<>(current);
-        }
-    };
+    private static final Rule defaultRule = (current, parser) -> new Maybe<>(current);
 
     public static final SymbolType Bold = new SymbolType("Bold")
             .wikiMatcher(new Matcher().string("'''"))

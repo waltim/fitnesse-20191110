@@ -252,12 +252,7 @@ public class PageXmlizerTest {
     WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
     WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
-    xmlizer.addPageCondition(new XmlizePageCondition() {
-      @Override
-      public boolean canBeXmlized(WikiPage page) {
-        return !page.getName().equals("PageTwo");
-      }
-    });
+    xmlizer.addPageCondition(page -> !page.getName().equals("PageTwo"));
     Document doc = xmlizer.xmlize(root);
     String value = XmlUtil.xmlAsString(doc);
 

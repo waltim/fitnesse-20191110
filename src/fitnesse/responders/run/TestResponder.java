@@ -36,12 +36,7 @@ public class TestResponder extends SuiteResponder {
 
   @Override
   protected BaseFormatter newXmlFormatter() {
-    return new TestXmlFormatter(context, page, new TestXmlFormatter.WriterFactory() {
-      @Override
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-        return response.getWriter();
-      }
-    });
+    return new TestXmlFormatter(context, page, (context, page, counts, time) -> response.getWriter());
   }
 
 }

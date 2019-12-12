@@ -19,12 +19,9 @@ public abstract class SecurePageOperation implements SecureOperation {
       return false;
 
     final boolean[] found = new boolean[1];
-    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage page) {
-        if (hasSecurityModeAttribute(page))
-          found[0] = true;
-      }
+    page.getPageCrawler().traversePageAndAncestors(page1 -> {
+      if (hasSecurityModeAttribute(page1))
+        found[0] = true;
     });
     return found[0];
   }

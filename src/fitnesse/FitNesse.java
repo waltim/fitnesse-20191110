@@ -32,12 +32,7 @@ public class FitNesse {
 
   public FitNesse(FitNesseContext context) {
     this.context = context;
-    RejectedExecutionHandler rejectionHandler = new RejectedExecutionHandler() {
-      @Override
-      public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
-      }
-    };
+    RejectedExecutionHandler rejectionHandler = (r, executor) -> LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
     this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
             new DaemonThreadFactory(), rejectionHandler);
   }

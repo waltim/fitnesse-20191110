@@ -29,12 +29,7 @@ public class ClassPathBuilder {
   private List<String> getInheritedPathElements(WikiPage page) {
     final List<String> items = new ArrayList<>();
 
-    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage p) {
-        items.addAll(getItemsFromPage(p));
-      }
-    });
+    page.getPageCrawler().traversePageAndAncestors(p -> items.addAll(getItemsFromPage(p)));
     return items;
   }
 

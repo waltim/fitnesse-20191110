@@ -24,12 +24,7 @@ public class SslSocketServiceTest {
   private static final int RANDOM_PORT = 0;
 
   public SslSocketServiceTest() {
-    connectionCounter = new SocketServer() {
-      @Override
-      public void serve(Socket s) {
-        connections++;
-      }
-    };
+    connectionCounter = s -> connections++;
   }
 
   @Before
