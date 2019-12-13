@@ -153,30 +153,24 @@ public class FitNesseExpediterTest {
   }
 
   private Thread makeSendingThread(final FitNesseExpediter sender) {
-    return new Thread(new Runnable() {
-      @Override
-      public void run() {
+    return new Thread(() -> {
         try {
-          sender.run();
+            sender.run();
         }
         catch (Exception e) {
-          e.printStackTrace();
+            e.printStackTrace();
         }
-      }
     });
   }
 
   private Thread makeParsingThread() {
-    return new Thread(new Runnable() {
-      @Override
-      public void run() {
+    return new Thread(() -> {
         try {
-          response = new ResponseParser(clientInput);
+            response = new ResponseParser(clientInput);
         }
         catch (Exception e) {
-          e.printStackTrace();
+            e.printStackTrace();
         }
-      }
     });
   }
 

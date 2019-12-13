@@ -25,11 +25,8 @@ public class HtmlBuilder implements Translation {
     }
 
     public HtmlBuilder attribute(final String name, final String value) {
-        builders.add(new TagBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.addAttribute(name, value);
-            }
+        builders.add((TagBuilder) (Translator translator, Symbol symbol, HtmlTag tag) -> {
+            tag.addAttribute(name, value);
         });
         return this;
     }
@@ -37,12 +34,9 @@ public class HtmlBuilder implements Translation {
     public HtmlBuilder attribute(String name, int index) { return attribute(name, index, ""); }
 
     public HtmlBuilder attribute(final String name, final int index, final String prefix) {
-        builders.add(new TagBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.addAttribute(name, prefix +
-                        (index < 0 ? symbol.getContent() : TranslateChildAt(translator, symbol, index)));
-            }
+        builders.add((TagBuilder) (Translator translator, Symbol symbol, HtmlTag tag) -> {
+            tag.addAttribute(name, prefix +
+                    (index < 0 ? symbol.getContent() : TranslateChildAt(translator, symbol, index)));
         });
         return this;
     }
@@ -50,11 +44,8 @@ public class HtmlBuilder implements Translation {
     public HtmlBuilder body(int index) { return body(index, ""); }
 
     public HtmlBuilder body(final int index, final String prefix) {
-        builders.add(new TagBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.add(prefix + TranslateChildAt(translator, symbol, index));
-            }
+        builders.add((TagBuilder) (Translator translator, Symbol symbol, HtmlTag tag) -> {
+            tag.add(prefix + TranslateChildAt(translator, symbol, index));
         });
         return this;
     }
@@ -64,11 +55,8 @@ public class HtmlBuilder implements Translation {
     }
 
     public HtmlBuilder bodyContent() {
-        builders.add(new TagBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.add(new HtmlText(symbol.getContent()));
-            }
+        builders.add((TagBuilder) (Translator translator, Symbol symbol, HtmlTag tag) -> {
+            tag.add(new HtmlText(symbol.getContent()));
         });
         return this;
     }

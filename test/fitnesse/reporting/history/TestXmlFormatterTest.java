@@ -171,35 +171,26 @@ public class TestXmlFormatterTest {
   @Test
   public void executionReportExceptionsAreThreadSafe() throws IOException {
     final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
-    testThreadSaveOperation(formatter, new Runnable() {
-      @Override
-      public void run() {
+    testThreadSaveOperation(formatter, () -> {
         formatter.exceptionOccurred(new Exception("foo"));
-      }
     });
   }
 
   @Test
   public void executionReportResultsAreThreadSafe() throws IOException {
     final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
-    testThreadSaveOperation(formatter, new Runnable() {
-      @Override
-      public void run() {
+    testThreadSaveOperation(formatter, () -> {
         formatter.testStarted(new WikiTestPage(new WikiPageDummy("name", "content", null)));
-      }
     });
   }
 
   private void testThreadSaveOperation(TestXmlFormatter formatter, final Runnable target) throws IOException {
     final boolean[] sentinel = { true };
-    Thread dataInjector = new Thread(new Runnable() {
-      @Override
-      public void run() {
+    Thread dataInjector = new Thread(() -> {
         while (sentinel[0]) {
-          target.run();
-          Thread.yield();
+            target.run();
+            Thread.yield();
         }
-      }
     });
 
     dataInjector.setDaemon(true);

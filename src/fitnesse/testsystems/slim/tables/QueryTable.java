@@ -354,12 +354,7 @@ public class QueryTable extends SlimTable {
     }
 
     public static java.util.Comparator<MatchedResult> compareByScore() {
-      return new java.util.Comparator<MatchedResult>() {
-        @Override
-        public int compare(MatchedResult o1, MatchedResult o2) {
-          return o2.score - o1.score;
-        }
-      };
+      return (MatchedResult o1, MatchedResult o2) -> o2.score - o1.score;
     }
   }
 }

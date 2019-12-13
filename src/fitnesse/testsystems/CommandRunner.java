@@ -66,18 +66,12 @@ public class CommandRunner {
     InputStream stderr = process.getErrorStream();
 
     // Fit and SlimService
-    new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
-      @Override
-      public void write(String output) {
+    new Thread(new OutputReadingRunnable(stdout, (String output) -> {
         executionLogListener.stdOut(output);
-      }
     }), "CommandRunner stdOut").start();
-    new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-      @Override
-      public void write(String output) {
+    new Thread(new OutputReadingRunnable(stderr, (String output) -> {
         executionLogListener.stdErr(output);
         setCommandErrorMessage(output);
-      }
     }), "CommandRunner stdErr").start();
 
     // Close stdin

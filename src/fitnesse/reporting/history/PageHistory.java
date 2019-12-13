@@ -36,16 +36,13 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private Comparator<Date> reverseChronologicalDateComparator() {
-    return new Comparator<Date>() {
-      @Override
-      public int compare(Date d1, Date d2) {
+    return (Date d1, Date d2) -> {
         long diff = d2.getTime() - d1.getTime();
         if (diff < 0)
-          return -1;
+            return -1;
         if (diff > 0)
-          return 1;
+            return 1;
         return 0;
-      }
     };
   }
 

@@ -249,15 +249,12 @@ public class CommandRunningFitClient extends FitClient {
     }
 
     protected Thread createTestRunnerThread(final Method testRunnerMethod, final String[] args) {
-      Runnable fastFitServerRunnable = new Runnable() {
-        @Override
-        public void run() {
+      Runnable fastFitServerRunnable = () -> {
           try {
-            testRunnerMethod.invoke(null, (Object) args);
+              testRunnerMethod.invoke(null, (Object) args);
           } catch (IllegalAccessException|InvocationTargetException e) {
-            LOG.log(Level.WARNING, "Could not start in-process test runner", e);
+              LOG.log(Level.WARNING, "Could not start in-process test runner", e);
           }
-        }
       };
       Thread fitServerThread = new Thread(fastFitServerRunnable);
       fitServerThread.setContextClassLoader(classLoader);
