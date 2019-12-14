@@ -166,21 +166,11 @@ public class SuiteFilter {
     }
 
     private boolean checkIfAnyTestTagMatchesAnyQueryTag(String[] testTags) {
-      for (String queryTag : tags) {
-        if (containsTag(testTags, queryTag)) {
-          return true;
-        }
-      }
-      return false;
+      return tags.stream().anyMatch(queryTag -> containsTag(testTags, queryTag));
     }
 
     private boolean containsTag(String[] testTags, String queryTag) {
-      for (String testTag: testTags) {
-        if (tagsMatch(queryTag, testTag)) {
-          return true;
-        }
-      }
-      return false;
+      return testTags.stream().anyMatch(testTag -> tagsMatch(queryTag, testTag));
     }
 
     private boolean tagsMatch(String queryTag, String testTag) {
