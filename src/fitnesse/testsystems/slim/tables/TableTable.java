@@ -80,8 +80,9 @@ public class TableTable extends SlimTable {
   private void addNewRows(Table table, List<List<Object>> tableResults) {
     while (table.getRowCount() - 1 < tableResults.size()) {
       List<String> l = new ArrayList<>();
-      for (Object s : tableResults.get(table.getRowCount() - 1))
-        l.add((String) s);
+      tableResults.get(table.getRowCount() - 1).forEach((s) -> {
+          l.add((String) s);
+        });
       table.addRow(l);
     }
   }

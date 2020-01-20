@@ -87,12 +87,14 @@ public class SymbolProvider {
     public SymbolProvider add(SymbolType symbolType) {
         if (matchesFor(symbolType)) return this;
         symbolTypes.add(symbolType);
-        for (Matcher matcher: symbolType.getWikiMatchers()) {
-            for (char first: matcher.getFirsts()) {
+        symbolType.getWikiMatchers().forEach((matcher) -> {
+            matcher.getFirsts().stream().map((first) -> {
                 if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
+                return first;
+            }).forEachOrdered((first) -> {
                 currentDispatch.get(first).add(symbolType);
-            }
-        }
+            });
+        });
         return this;
     }
 

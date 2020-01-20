@@ -13,9 +13,9 @@ public abstract class Translator {
     
     public String translateTree(Symbol syntaxTree) {
         StringBuilder result = new StringBuilder();
-        for (Symbol symbol : syntaxTree.getChildren()) {
+        syntaxTree.getChildren().forEach((symbol) -> {
             result.append(translate(symbol));
-        }
+        });
         return result.toString();
     }
 
@@ -25,9 +25,9 @@ public abstract class Translator {
         }
         else {
             StringBuilder result = new StringBuilder(symbol.getContent());
-            for (Symbol child: symbol.getChildren()) {
+            symbol.getChildren().forEach((child) -> {
                 result.append(translate(child));
-            }
+            });
             return result.toString();
         }
     }

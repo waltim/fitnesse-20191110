@@ -51,12 +51,14 @@ public class PagesRunInSuite {
 
   private List<Object> buildQueryResponse(List<String> testPages) {
     List<Object> rows = new ArrayList<>();
-    for (String testPage : testPages) {
-      List<Object> columns = new ArrayList<>();
-      List<String> pageNameCell = Arrays.asList("page name", testPage);
-      columns.add(pageNameCell);
-      rows.add(columns);
-    }
+    testPages.stream().map((testPage) -> {
+        List<Object> columns = new ArrayList<>();
+        List<String> pageNameCell = Arrays.asList("page name", testPage);
+        columns.add(pageNameCell);
+          return columns;
+      }).forEachOrdered((columns) -> {
+          rows.add(columns);
+      });
     return rows;
   }
 }

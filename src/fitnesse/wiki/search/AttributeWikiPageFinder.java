@@ -67,14 +67,10 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
       return false;
     }
 
-    for (Map.Entry<String, Boolean> input : attributes.entrySet()) {
-      if ("SetUp".equals(input.getKey()) || "TearDown".equals(input.getKey()))
-        continue;
-
-      if (!attributeMatchesInput(pageData.hasAttribute(input.getKey()), input
-          .getValue()))
-        return false;
-    }
+      if (!attributes.entrySet().stream().filter((input) -> !("SetUp".equals(input.getKey()) || "TearDown".equals(input.getKey()))).noneMatch((input) -> (!attributeMatchesInput(pageData.hasAttribute(input.getKey()), input
+              .getValue())))) {
+          return false;
+      }
 
     return suitesMatchInput(pageData, suites);
   }
@@ -138,10 +134,9 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     if (suites.isEmpty() != isEmptyOrNull(suitesProperty))
       return false;
 
-    for (String suite : suites) {
-      if (!suitesProperty.contains(suite))
-        return false;
-    }
+      if (!suites.stream().noneMatch((suite) -> (!suitesProperty.contains(suite)))) {
+          return false;
+      }
     return true;
   }
 

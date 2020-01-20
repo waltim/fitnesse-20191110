@@ -36,12 +36,10 @@ public class PagesByTestSystem {
   private Map<WikiPageIdentity, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown(List<WikiPage> pages) {
     Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem = new HashMap<>();
 
-    for (WikiPage wikiPage : pages) {
-      if (!WikiTestPage.isSuiteSetupOrTearDown(wikiPage)) {
+    pages.stream().filter((wikiPage) -> (!WikiTestPage.isSuiteSetupOrTearDown(wikiPage))).forEachOrdered((wikiPage) -> {
         WikiPageIdentity identity = new WikiPageIdentity(wikiPage);
         pagesByTestSystem.computeIfAbsent(identity, i -> new LinkedList<>()).add(wikiPage);
-      }
-    }
+      });
     return pagesByTestSystem;
   }
 
@@ -49,30 +47,28 @@ public class PagesByTestSystem {
     Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<>();
 
     if (!testsPerSystem.isEmpty()) {
-      for (Map.Entry<WikiPageIdentity, List<WikiPage>> entry : testsPerSystem.entrySet()) {
-        WikiPageIdentity system = entry.getKey();
-        List<WikiPage> testPages = entry.getValue();
-        List<WikiPage> allPages = processor.addSuiteSetUpsAndTearDowns(testPages);
-        orderedPagesByTestSystem.put(system, asTestPages(allPages));
-      }
+        testsPerSystem.entrySet().forEach((entry) -> {
+            WikiPageIdentity system = entry.getKey();
+            List<WikiPage> testPages = entry.getValue();
+            List<WikiPage> allPages = processor.addSuiteSetUpsAndTearDowns(testPages);
+            orderedPagesByTestSystem.put(system, asTestPages(allPages));
+        });
     }
     return orderedPagesByTestSystem;
   }
 
   private List<TestPage> asTestPages(List<WikiPage> wikiPages) {
     List<TestPage> testPages = new ArrayList<>(wikiPages.size());
-    for (WikiPage page : wikiPages) {
-      // TODO: find the appropriate type of test page for this test system
-      testPages.add(new WikiTestPage(page));
-    }
+    wikiPages.forEach((page) -> {
+        // TODO: find the appropriate type of test page for this test system
+        testPages.add(new WikiTestPage(page));
+      });
     return testPages;
   }
 
   public int totalTestsToRun() {
     int tests = 0;
-    for (List<TestPage> listOfPagesToRun : pagesByTestSystem.values()) {
-      tests += listOfPagesToRun.size();
-    }
+    tests = pagesByTestSystem.values().stream().map((listOfPagesToRun) -> listOfPagesToRun.size()).reduce(tests, Integer::sum);
     return tests;
   }
 

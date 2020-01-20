@@ -165,12 +165,12 @@ public class ScenarioTableExtensionTest {
 
     @Override
     protected void getScenarioArguments() {
-      for (String input : inputs) {
-        addInput(input);
-      }
-      for (String output : outputs) {
-        addOutput(output);
-      }
+        inputs.forEach((input) -> {
+            addInput(input);
+        });
+        outputs.forEach((output) -> {
+            addOutput(output);
+        });
     }
 
     private Set<String> findArguments(Pattern pattern) throws SyntaxError {
@@ -240,12 +240,12 @@ public class ScenarioTableExtensionTest {
             ScenarioTestContext sTestContext = (ScenarioTestContext) context;
             AutoArgScenarioTable caller = getCallingTable(sTestContext);
             Map<String, String> callerArgs = caller.getCurrentCallArguments();
-            for (Map.Entry<String, String> entry : callerArgs.entrySet()) {
-              String arg = entry.getKey();
-              if (inputs.contains(arg)) {
-                scenarioArguments.put(arg, entry.getValue());
-              }
-            }
+            callerArgs.entrySet().forEach((entry) -> {
+                String arg = entry.getKey();
+                  if (inputs.contains(arg)) {
+                      scenarioArguments.put(arg, entry.getValue());
+                  }
+              });
           }
         }
         return super.call(scenarioArguments, parentTable, row);

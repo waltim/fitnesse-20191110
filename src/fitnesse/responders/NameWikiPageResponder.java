@@ -29,15 +29,13 @@ public class NameWikiPageResponder extends BasicResponder {
   private List<String> addLines(Request request, WikiPage requestedPage, String prefix) {
     List<String> lines = new ArrayList<>();
 
-    for (WikiPage child : requestedPage.getChildren()) {
-	  if(!request.hasInput("LeafOnly") || child.getChildren().isEmpty()) {
-        lines.add(makeLine(request, child, prefix));
-      }
-
-	  if (request.hasInput("Recursive")) {
-	    lines.addAll(addLines(request, child, prefix + child.getName() + "."));
-	  }
-    }
+    requestedPage.getChildren().stream().map((child) -> {
+        if(!request.hasInput("LeafOnly") || child.getChildren().isEmpty()) {
+            lines.add(makeLine(request, child, prefix));
+        }   return child;
+      }).filter((child) -> (request.hasInput("Recursive"))).forEachOrdered((child) -> {
+          lines.addAll(addLines(request, child, prefix + child.getName() + "."));
+      });
 
     return lines;
   }
@@ -57,9 +55,9 @@ public class NameWikiPageResponder extends BasicResponder {
 	  Set<String> tags = getTags(child);
 	  if(!tags.isEmpty()) {
 	    line.append(" ");
-		for(String tag : tags) {
-          line.append("[").append(tag).append("]");
-		}
+            tags.forEach((tag) -> {
+                line.append("[").append(tag).append("]");
+              });
       }
 	}
 

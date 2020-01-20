@@ -91,8 +91,9 @@ public class HtmlTable implements Table {
 
   public List<List<String>> asList() {
     List<List<String>> list = new ArrayList<>();
-    for (Row row : rows)
-      list.add(row.asList());
+    rows.forEach((row) -> {
+        list.add(row.asList());
+      });
     return list;
   }
 
@@ -110,8 +111,9 @@ public class HtmlTable implements Table {
     Row row = new Row();
     rows.add(row);
     tableNode.getChildren().add(row.getRowNode());
-    for (String s : list)
-      row.appendCell(s == null ? "" : asHtml(s));
+    list.forEach((s) -> {
+        row.appendCell(s == null ? "" : asHtml(s));
+      });
     return rows.size() - 1;
   }
 
@@ -286,10 +288,10 @@ public class HtmlTable implements Table {
 
     private List<String> asList() {
       List<String> list = new ArrayList<>();
-      for (Cell cell : cells) {
-        // was "colorized"
-        list.add(cell.getTestResult());
-      }
+      cells.forEach((cell) -> {
+          // was "colorized"
+          list.add(cell.getTestResult());
+        });
       return list;
     }
 

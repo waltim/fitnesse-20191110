@@ -294,14 +294,14 @@ public class Request {
     if (map.isEmpty()) {
       buffer.append("\tempty");
     }
-    for (Entry<String, String> entry: map.entrySet()) {
-      String value = entry.getValue() == null ? null : escape(entry.getValue());
-      buffer.append("\t")
-              .append(escape(entry.getKey()))
-              .append(" \t-->\t ")
-              .append(value)
-              .append("\n");
-    }
+    map.entrySet().forEach((entry) -> {
+        String value = entry.getValue() == null ? null : escape(entry.getValue());
+        buffer.append("\t")
+                .append(escape(entry.getKey()))
+                .append(" \t-->\t ")
+                .append(value)
+                .append("\n");
+      });
   }
 
   private String escape(String foo) {

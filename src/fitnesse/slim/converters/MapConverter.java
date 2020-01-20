@@ -34,21 +34,21 @@ public class MapConverter implements Converter<Map> {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     HtmlTag table = new HtmlTag("table");
     table.addAttribute("class", "hash_table");
-    for (Map.Entry<?, ?> entry : hash.entrySet()) {
-      HtmlTag row = new HtmlTag("tr");
-      row.addAttribute("class", "hash_row");
-      table.add(row);
-
-      HtmlTag keyCell = new HtmlTag("td");
-      addCellContent(keyCell, entry.getKey());
-      keyCell.addAttribute("class", "hash_key");
-      row.add(keyCell);
-
-      HtmlTag valueCell = new HtmlTag("td");
-      addCellContent(valueCell, entry.getValue());
-      valueCell.addAttribute("class", "hash_value");
-      row.add(valueCell);
-    }
+    hash.entrySet().forEach((entry) -> {
+        HtmlTag row = new HtmlTag("tr");
+        row.addAttribute("class", "hash_row");
+        table.add(row);
+        
+        HtmlTag keyCell = new HtmlTag("td");
+        addCellContent(keyCell, entry.getKey());
+        keyCell.addAttribute("class", "hash_key");
+        row.add(keyCell);
+        
+        HtmlTag valueCell = new HtmlTag("td");
+        addCellContent(valueCell, entry.getValue());
+        valueCell.addAttribute("class", "hash_value");
+        row.add(valueCell);
+      });
     return table;
   }
 

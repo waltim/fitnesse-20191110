@@ -32,13 +32,11 @@ public class ClassPath {
     this.elements = new ArrayList<>();
     this.separator = paths.get(0).getSeparator();
 
-    for (ClassPath path : paths) {
-      for (String element : path.getElements()) {
-        if (!elements.contains(element)) {
-          elements.add(element);
-        }
-      }
-    }
+    paths.forEach((path) -> {
+        path.getElements().stream().filter((element) -> (!elements.contains(element))).forEachOrdered((element) -> {
+            elements.add(element);
+          });
+      });
   }
 
   public ClassPath withLocationForClass(String testRunner) {

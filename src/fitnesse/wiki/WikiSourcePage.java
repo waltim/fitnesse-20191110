@@ -90,9 +90,9 @@ public class WikiSourcePage implements SourcePage {
   @Override
   public Collection<SourcePage> getChildren() {
         ArrayList<SourcePage> children = new ArrayList<>();
-        for (WikiPage child: page.getChildren()) {
+        page.getChildren().forEach((child) -> {
             children.add(new WikiSourcePage(child));
-        }
+        });
         return children;
     }
 

@@ -36,9 +36,9 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
       ArrayList<Object> list = new ArrayList<>();
       // Make the test stable by ordering the keys
       TreeSet<String> orderedKeySet = new TreeSet<>(theMap.keySet());
-      for (String key : orderedKeySet) {
-        list.add(Arrays.asList(key, theMap.get(key)));
-      }
+      orderedKeySet.forEach((key) -> {
+          list.add(Arrays.asList(key, theMap.get(key)));
+        });
       return list;
     }
 

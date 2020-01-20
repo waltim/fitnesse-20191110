@@ -60,16 +60,12 @@ public class RefactorPageResponder implements SecureResponder {
     final List<String> pageNames = new ArrayList<>();
     if (thisPage != null) {
       final WikiPagePath thisPagePath = thisPage.getFullPath();
-      rootPage.getPageCrawler().traverse(new TraversalListener<WikiPage>() {
-
-        @Override
-        public void process(WikiPage page) {
+      rootPage.getPageCrawler().traverse((WikiPage page) -> {
           WikiPagePath pagePath = page.getFullPath();
           pagePath.makeAbsolute();
           if (!thisPagePath.equals(pagePath) && !pagePath.isEmpty()) {
-            pageNames.add(pagePath.toString());
+              pageNames.add(pagePath.toString());
           }
-        }
       }, new NoPruningStrategy());
     }
     return pageNames;

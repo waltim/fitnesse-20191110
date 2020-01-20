@@ -51,9 +51,9 @@ public abstract class PageListSetUpTearDownTestBase {
 
   protected List<String> getPagePaths(List<WikiPage> pages) {
     List<String> list = new ArrayList<>(pages.size());
-    for (WikiPage page : pages) {
-      list.add(page.getFullPath().toString());
-    }
+    pages.forEach((page) -> {
+        list.add(page.getFullPath().toString());
+      });
     return list;
   }
 

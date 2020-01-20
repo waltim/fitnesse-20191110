@@ -185,15 +185,12 @@ public class FileResponder implements SecureResponder {
 
   @Override
   public SecureOperation getSecureOperation() {
-    return new SecureOperation() {
-      @Override
-      public boolean shouldAuthenticate(FitNesseContext context, Request request) {
+    return (FitNesseContext context, Request request) -> {
         try {
-          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
+            return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
         } catch (UnsupportedEncodingException e) {
-          throw new IllegalArgumentException("Invalid URL encoding", e);
+            throw new IllegalArgumentException("Invalid URL encoding", e);
         }
-      }
     };
   }
 

@@ -57,13 +57,15 @@ public class Image extends SymbolType implements Rule, Translation {
     }
 
     private void addOptions(Symbol link, Map<String, String> options) {
-        for (Map.Entry<String, String> entry : options.entrySet()) {
+        options.entrySet().forEach((entry) -> {
             String key = entry.getKey();
             String value = entry.getValue();
             if (key.equals("-w")) link.putProperty(Link.WidthProperty, value);
             if (key.equals("-m")) link.putProperty(Link.StyleProperty, String.format("%2$smargin:%1$spx %1$spx %1$spx %1$spx;", value, link.getProperty(Link.StyleProperty)));
-            if (key.equals("-b")) link.putProperty(Link.StyleProperty, String.format("%2$sborder:%1$spx solid black;", value, link.getProperty(Link.StyleProperty)));
-        }
+            if (key.equals("-b")) {
+                link.putProperty(Link.StyleProperty, String.format("%2$sborder:%1$spx solid black;", value, link.getProperty(Link.StyleProperty)));
+            }
+        });
     }
 
     private Maybe<Symbol> makeImageLink(Symbol current, Symbol link, String imageProperty) {

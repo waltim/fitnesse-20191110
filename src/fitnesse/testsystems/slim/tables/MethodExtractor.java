@@ -61,9 +61,9 @@ public class MethodExtractor {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("ME:[");
-    for (MethodExtractorRule configuration : configurations) {
-      sb.append(configuration.toString());
-    }
+    configurations.forEach((configuration) -> {
+        sb.append(configuration.toString());
+      });
     sb.append("]");
     return sb.toString();
   }

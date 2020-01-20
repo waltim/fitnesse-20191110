@@ -7,9 +7,9 @@ public abstract class SymbolTypeDecorator extends SymbolType implements Translat
         super(symbolTypeName);
         this.baseSymbolType = baseSymbolType;
         this.wikiRule(baseSymbolType.getWikiRule());
-        for(Matcher m: baseSymbolType.getWikiMatchers()){
+        baseSymbolType.getWikiMatchers().forEach((m) -> {
             this.wikiMatcher(m);
-        }
+        });
         this.htmlTranslation(this);
     }
 

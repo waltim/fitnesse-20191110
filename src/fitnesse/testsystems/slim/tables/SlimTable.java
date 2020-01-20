@@ -215,12 +215,13 @@ public abstract class SlimTable {
     String expr = variableNameWithDollar.substring(2, variableNameWithDollar.length() - 1);
     Map<String, MethodExecutionResult> symbols = new HashMap<>();
 
-    for (Map.Entry<String, String> symbol : testContext.getSymbols().entrySet()) {
-      if (symbol.getValue().startsWith("!{")) {
-        symbol.setValue(HtmlValueOfSymbol(symbol.getValue()));
-      }
-      symbols.put(symbol.getKey(), new MethodExecutionResult(symbol.getValue(), Object.class));
-    }
+    testContext.getSymbols().entrySet().stream().map((symbol) -> {
+        if (symbol.getValue().startsWith("!{")) {
+            symbol.setValue(HtmlValueOfSymbol(symbol.getValue()));
+        }   return symbol;
+      }).forEachOrdered((symbol) -> {
+          symbols.put(symbol.getKey(), new MethodExecutionResult(symbol.getValue(), Object.class));
+      });
     evaluator.setContext(expr, symbols);
 
     Object value;

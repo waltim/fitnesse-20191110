@@ -69,10 +69,12 @@ public class SuiteExecutionReport extends ExecutionReport {
   private String pageHistoryReferencesToString() {
     StringBuilder builder = new StringBuilder();
     if (!pageHistoryReferences.isEmpty()) {
-      for (PageHistoryReference reference : pageHistoryReferences) {
-        builder.append(reference.toString());
-        builder.append(",");
-      }
+        pageHistoryReferences.stream().map((reference) -> {
+            builder.append(reference.toString());
+            return reference;
+        }).forEachOrdered((_item) -> {
+            builder.append(",");
+        });
       builder.deleteCharAt(builder.length() - 1);
     }
     return builder.toString();

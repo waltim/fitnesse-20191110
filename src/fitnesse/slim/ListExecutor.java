@@ -38,9 +38,9 @@ public class ListExecutor {
 
     public List<Object> executeStatements(List<Object> statements) {
       List<Object> result = new ArrayList<>();
-      for (Object statement : statements)
-        if (!executor.stopHasBeenRequested())
+      statements.stream().filter((statement) -> (!executor.stopHasBeenRequested())).forEachOrdered((statement) -> {
           result.add(executeStatement(statement));
+        });
       return result;
     }
 

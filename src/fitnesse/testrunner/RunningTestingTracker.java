@@ -37,10 +37,10 @@ public class RunningTestingTracker {
 
   public String stopAllProcesses() {
     int count = 0;
-    for (Stoppable process : processes.values()) {
-      stopProcess(process);
-      count++;
-    }
+    count = processes.values().stream().map((process) -> {
+        stopProcess(process);
+          return process;
+      }).map((_item) -> 1).reduce(count, Integer::sum);
     return "Stopped " + Integer.toString(count) + " test(s) or suite(s)";
   }
 

@@ -117,9 +117,9 @@ public abstract class Response {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
         getReasonPhrase()).append(CRLF);
 
-      for (Entry<String, String> entry: headers.entrySet()) {
-        appendHeader(text, entry.getKey(), entry.getValue());
-      }
+      headers.entrySet().forEach((entry) -> {
+          appendHeader(text, entry.getKey(), entry.getValue());
+        });
 
       text.append(CRLF);
     }

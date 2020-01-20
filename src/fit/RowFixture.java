@@ -52,19 +52,19 @@ public abstract class RowFixture extends ColumnFixture {
       Map<Object, Object> eMap = eSort(expected, col);
       Map<Object, Object> cMap = cSort(computed, col);
       Set<Object> keys = union(eMap.keySet(), cMap.keySet());
-      for (Object key : keys) {
-        List<?> eList = (List<?>) eMap.get(key);
-        List<?> cList = (List<?>) cMap.get(key);
-        if (eList == null) {
-          surplus.addAll(cList);
-        } else if (cList == null) {
-          missing.addAll(eList);
-        } else if (eList.size() == 1 && cList.size() == 1) {
-          check(eList, cList);
-        } else {
-          match(eList, cList, col + 1);
-        }
-      }
+      keys.forEach((key) -> {
+          List<?> eList = (List<?>) eMap.get(key);
+          List<?> cList = (List<?>) cMap.get(key);
+          if (eList == null) {
+              surplus.addAll(cList);
+          } else if (cList == null) {
+              missing.addAll(eList);
+          } else if (eList.size() == 1 && cList.size() == 1) {
+              check(eList, cList);
+          } else {
+              match(eList, cList, col + 1);
+          }
+        });
     }
   }
 
@@ -86,37 +86,36 @@ public abstract class RowFixture extends ColumnFixture {
   protected Map<Object, Object> eSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
     Map<Object, Object> result = new HashMap<>(list.size());
-    for (Object o : list) {
-      Parse row = (Parse) o;
-      Parse cell = row.parts.at(col);
-      try {
-        Object key = a.parse(cell.text());
-        bin(result, key, row);
-      }
-      catch (Exception e) {
-        exception(cell, e);
-        for (Parse rest = cell.more; rest != null; rest = rest.more) {
-          ignore(rest);
+    list.stream().map((o) -> (Parse) o).forEachOrdered((row) -> {
+        Parse cell = row.parts.at(col);
+        try {
+            Object key = a.parse(cell.text());
+            bin(result, key, row);
         }
-      }
-    }
+        catch (Exception e) {
+            exception(cell, e);
+            for (Parse rest = cell.more; rest != null; rest = rest.more) {
+                ignore(rest);
+            }
+        }
+      });
     return result;
   }
 
   protected Map<Object, Object> cSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
     Map<Object, Object> result = new HashMap<>(list.size());
-    for (Object row : list) {
-      try {
-        a.target = row;
-        Object key = a.get();
-        bin(result, key, row);
-      }
-      catch (Exception e) {
-        // surplus anything with bad keys, including null
-        surplus.add(row);
-      }
-    }
+    list.forEach((row) -> {
+        try {
+            a.target = row;
+            Object key = a.get();
+            bin(result, key, row);
+        }
+        catch (Exception e) {
+            // surplus anything with bad keys, including null
+            surplus.add(row);
+        }
+      });
     return result;
   }
 

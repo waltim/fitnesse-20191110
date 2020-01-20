@@ -188,9 +188,9 @@ public class WikiPageResponderTest {
     final MockRequest request = new MockRequest();
     request.setResource(name);
 
-    for(Map.Entry<String, String> entry : inputs.entrySet()){
+    inputs.entrySet().forEach((entry) -> {
         request.addInput(entry.getKey(), entry.getValue());
-    }
+      });
     final Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(context, request);
   }

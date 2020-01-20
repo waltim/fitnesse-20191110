@@ -10,9 +10,9 @@ public class ListBuilder implements Translation {
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag list = new HtmlTag(listTag);
-        for (Symbol child: symbol.getChildren()) {
+        symbol.getChildren().forEach((child) -> {
             list.add(new HtmlTag("li", translator.translate(child)));
-        }
+        });
         return list.html();
     }
 }

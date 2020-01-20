@@ -66,14 +66,16 @@ class DirectoryResponder implements SecureResponder {
 
   private Response makeDirectoryListingJsonPage() throws UnsupportedEncodingException {
     JSONArray listing = new JSONArray();
-    for (FileInfo fileInfo : makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory))) {
-      JSONObject fiObject = new JSONObject();
-      fiObject.put("name", fileInfo.getName());
-      fiObject.put("size", fileInfo.getSize());
-      fiObject.put("date", fileInfo.getDate());
-      fiObject.put("directory", fileInfo.isDirectory());
-      listing.put(fiObject);
-    }
+    makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory)).stream().map((fileInfo) -> {
+        JSONObject fiObject = new JSONObject();
+        fiObject.put("name", fileInfo.getName());
+        fiObject.put("size", fileInfo.getSize());
+        fiObject.put("date", fileInfo.getDate());
+        fiObject.put("directory", fileInfo.isDirectory());
+          return fiObject;
+      }).forEachOrdered((fiObject) -> {
+          listing.put(fiObject);
+      });
 
     SimpleResponse simpleResponse = new SimpleResponse();
     simpleResponse.setContentType(Response.Format.JSON);

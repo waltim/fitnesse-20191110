@@ -108,8 +108,9 @@ public class FitClient implements SocketAccepter {
   }
 
   public void exceptionOccurred(Throwable cause) {
-    for (FitClientListener listener : listeners)
-      listener.exceptionOccurred(cause);
+      listeners.forEach((listener) -> {
+          listener.exceptionOccurred(cause);
+      });
   }
 
   private class FitListeningRunnable implements Runnable {
@@ -144,13 +145,15 @@ public class FitClient implements SocketAccepter {
     }
 
     private void testComplete(TestSummary summary) throws IOException {
-      for (FitClientListener listener : listeners)
-        listener.testComplete(summary);
+        listeners.forEach((listener) -> {
+            listener.testComplete(summary);
+        });
     }
 
     private void testOutputChunk(String value) throws IOException {
-      for (FitClientListener listener : listeners)
-        listener.testOutputChunk(value);
+        listeners.forEach((listener) -> {
+            listener.testOutputChunk(value);
+        });
     }
   }
 

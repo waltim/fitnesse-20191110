@@ -17,31 +17,36 @@ public class CompositeExecutionLogListener implements ExecutionLogListener {
 
   @Override
   public void commandStarted(ExecutionContext context) {
-    for (ExecutionLogListener listener : listeners)
-      listener.commandStarted(context);
+      listeners.forEach((listener) -> {
+          listener.commandStarted(context);
+      });
   }
 
   @Override
   public void stdOut(String output) {
-    for (ExecutionLogListener listener : listeners)
-      listener.stdOut(output);
+      listeners.forEach((listener) -> {
+          listener.stdOut(output);
+      });
   }
 
   @Override
   public void stdErr(String output) {
-    for (ExecutionLogListener listener : listeners)
-      listener.stdErr(output);
+      listeners.forEach((listener) -> {
+          listener.stdErr(output);
+      });
   }
 
   @Override
   public void exitCode(int exitCode) {
-    for (ExecutionLogListener listener : listeners)
-      listener.exitCode(exitCode);
+      listeners.forEach((listener) -> {
+          listener.exitCode(exitCode);
+      });
   }
 
   @Override
   public void exceptionOccurred(Throwable e) {
-    for (ExecutionLogListener listener : listeners)
-      listener.exceptionOccurred(e);
+      listeners.forEach((listener) -> {
+          listener.exceptionOccurred(e);
+      });
   }
 }

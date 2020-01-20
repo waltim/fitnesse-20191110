@@ -10,22 +10,22 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
 
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
-    for (TestSystemListener listener : listeners())
-      if (listener instanceof TestsRunnerListener)
-        ((TestsRunnerListener) listener).announceNumberTestsToRun(testsToRun);
+      listeners().stream().filter((listener) -> (listener instanceof TestsRunnerListener)).forEachOrdered((listener) -> {
+          ((TestsRunnerListener) listener).announceNumberTestsToRun(testsToRun);
+      });
   }
 
   @Override
   public void unableToStartTestSystem(final String testSystemName, final Throwable cause) {
-    for (TestSystemListener listener : listeners())
-      if (listener instanceof TestsRunnerListener)
-        ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
+      listeners().stream().filter((listener) -> (listener instanceof TestsRunnerListener)).forEachOrdered((listener) -> {
+          ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
+      });
   }
 
   @Override
   public void close() {
-    for (TestSystemListener listener : listeners())
-        if (listener instanceof Closeable)
+      listeners().stream().filter((listener) -> (listener instanceof Closeable)).forEachOrdered((listener) -> {
           FileUtil.close((Closeable) listener);
+      });
   }
 }

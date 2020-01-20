@@ -297,9 +297,9 @@ public class SlimTestSystemTableProcessingTest {
     @Override
     public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws SlimCommunicationException {
       Map<String, Object> response = new HashMap<>();
-      for (Instruction statement : statements) {
-        response.put(statement.getId(), statement.getId());
-      }
+      statements.forEach((statement) -> {
+          response.put(statement.getId(), statement.getId());
+        });
       return response;
     }
 

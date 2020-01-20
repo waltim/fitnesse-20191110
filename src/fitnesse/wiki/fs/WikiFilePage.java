@@ -169,28 +169,26 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   }
 
   private WikiPageProperty mergeWikiPageProperties(final WikiPageProperty properties, final Symbol frontMatter) {
-    for (Symbol keyValue : frontMatter.getChildren()) {
-      if (keyValue.isType(FrontMatter.keyValueSymbolType)) {
-        String key = keyValue.getChildren().get(0).getContent();
-        String value = keyValue.getChildren().get(1).getContent();
-        if (isBooleanProperty(key)) {
-          if (isBlank(value) || isTruthy(value)) {
-            properties.set(key, value);
-          } else if (isFalsy(value)) {
-            properties.remove(key);
+      frontMatter.getChildren().stream().filter((keyValue) -> (keyValue.isType(FrontMatter.keyValueSymbolType))).forEachOrdered((keyValue) -> {
+          String key = keyValue.getChildren().get(0).getContent();
+          String value = keyValue.getChildren().get(1).getContent();
+          if (isBooleanProperty(key)) {
+              if (isBlank(value) || isTruthy(value)) {
+                  properties.set(key, value);
+              } else if (isFalsy(value)) {
+                  properties.remove(key);
+              }
+          } else {
+              WikiPageProperty symLinks = properties.set(key, value);
+              for (int i = 2; i < keyValue.getChildren().size(); i++) {
+                  final Symbol subProperty = keyValue.getChildren().get(i);
+                  assert subProperty.isType(FrontMatter.keyValueSymbolType);
+                  String linkName = subProperty.getChildren().get(0).getContent();
+                  String linkPath = subProperty.getChildren().get(1).getContent();
+                  symLinks.set(linkName, linkPath);
+              }
           }
-        } else {
-          WikiPageProperty symLinks = properties.set(key, value);
-          for (int i = 2; i < keyValue.getChildren().size(); i++) {
-            final Symbol subProperty = keyValue.getChildren().get(i);
-            assert subProperty.isType(FrontMatter.keyValueSymbolType);
-            String linkName = subProperty.getChildren().get(0).getContent();
-            String linkPath = subProperty.getChildren().get(1).getContent();
-            symLinks.set(linkName, linkPath);
-          }
-        }
-      }
-    }
+      });
     return properties;
   }
 
@@ -224,29 +222,25 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   private String propertiesYaml(final WikiPageProperty pageProperties) {
     final WikiPageProperty defaultProperties = defaultPageProperties();
     final List<String> lines = new ArrayList<>();
-    for (String key : pageProperties.keySet()) {
-      if (isBooleanProperty(key)) {
-        if (!defaultProperties.has(key)) {
-          lines.add(key);
-        }
-      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key)) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(key);
-        if (!isBlank(pageProperties.get(key))) {
-          builder.append(": ").append(pageProperties.get(key));
-        }
-        final WikiPageProperty subProperty = pageProperties.getProperty(key);
-        for (String pageName: subProperty.keySet()) {
-          builder.append("\n  ").append(pageName).append(": ").append(subProperty.get(pageName));
-        }
-        lines.add(builder.toString());
-      }
-    }
-    for (String key : defaultProperties.keySet()) {
-        if (isBooleanProperty(key) && !pageProperties.has(key)) {
-          lines.add(key + ": no");
-        }
-    }
+    pageProperties.keySet().forEach((key) -> {
+          if (isBooleanProperty(key)) {
+              if (!defaultProperties.has(key)) {
+                  lines.add(key);
+              } } else if (!WikiPageProperty.LAST_MODIFIED.equals(key)) {
+                  final StringBuilder builder = new StringBuilder();
+                  builder.append(key);
+                  if (!isBlank(pageProperties.get(key))) {
+                      builder.append(": ").append(pageProperties.get(key));
+                  }     final WikiPageProperty subProperty = pageProperties.getProperty(key);
+                  subProperty.keySet().forEach((pageName) -> {
+                      builder.append("\n  ").append(pageName).append(": ").append(subProperty.get(pageName));
+              });
+                  lines.add(builder.toString());
+          }
+      });
+    defaultProperties.keySet().stream().filter((key) -> (isBooleanProperty(key) && !pageProperties.has(key))).forEachOrdered((key) -> {
+        lines.add(key + ": no");
+      });
     Collections.sort(lines);
     return lines.isEmpty() ? "" : "---\n" + StringUtils.join(lines, '\n') + "\n---\n";
   }

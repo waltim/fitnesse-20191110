@@ -38,11 +38,9 @@ public class WikitextPageUtil {
 
   public static List<Symbol> getSymbols(final WikitextPage page, final SymbolType symbolType) {
     final List<Symbol> symbols = new LinkedList<>();
-    for (final Symbol symbol : page.getSyntaxTree().getChildren()) {
-      if (symbol.isType(symbolType)) {
+    page.getSyntaxTree().getChildren().stream().filter((symbol) -> (symbol.isType(symbolType))).forEachOrdered((symbol) -> {
         symbols.add(symbol);
-      }
-    }
+      });
     return Collections.unmodifiableList(symbols);
   }
 

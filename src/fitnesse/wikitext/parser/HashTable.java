@@ -32,7 +32,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
         table.addAttribute("class", "hash_table");
-        for (Symbol child: symbol.getChildren()) {
+        symbol.getChildren().forEach((child) -> {
             HtmlTag row = new HtmlTag("tr");
             row.addAttribute("class", "hash_row");
             table.add(row);
@@ -42,7 +42,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
                 cell.addAttribute("class", cellClasses[i]);
                 row.add(cell);
             }
-        }
+        });
         return table.html();
    }
 }

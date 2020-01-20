@@ -68,32 +68,24 @@ public class TableListComparer {
   }
 
   public void sortMatchesByScore() {
-    Collections.sort(tableMatches, new Comparator<MatchedPair>() {
-
-      @Override
-      public int compare(MatchedPair match1, MatchedPair match2) {
+    Collections.sort(tableMatches, (MatchedPair match1, MatchedPair match2) -> {
         if (match1.matchScore > match2.matchScore)
-          return -1;
+            return -1;
         else if (match1.matchScore < match2.matchScore)
-          return 1;
+            return 1;
         else
-          return 0;
-      }
+            return 0;
     });
   }
 
   public void sortMatchesByTableIndex() {
-    Collections.sort(tableMatches, new Comparator<MatchedPair>() {
-
-      @Override
-      public int compare(MatchedPair match1, MatchedPair match2) {
+    Collections.sort(tableMatches, (MatchedPair match1, MatchedPair match2) -> {
         if (match1.first > match2.first)
-          return 1;
+            return 1;
         else if (match1.first < match2.first)
-          return -1;
+            return -1;
         else
-          return 0;
-      }
+            return 0;
     });
   }
 

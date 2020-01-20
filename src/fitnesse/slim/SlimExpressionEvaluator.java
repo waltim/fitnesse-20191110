@@ -34,15 +34,15 @@ public class SlimExpressionEvaluator {
     Converter<Map> mapCnv = ConverterRegistry.getConverterForClass(Map.class);
     Converter<List> listCnv = ConverterRegistry.getConverterForClass(List.class);
 
-    for (Map.Entry<String, MethodExecutionResult> entry : variables.entrySet()) {
-      String key = entry.getKey();
-      if (expr.contains(key)) {
-        Object value = entry.getValue().getObject();
-        value = convertWikiHashes(mapCnv, value);
-        value = convertWikiLists(listCnv, value);
-        engine.put(key, value);
-      }
-    }
+    variables.entrySet().forEach((entry) -> {
+        String key = entry.getKey();
+          if (expr.contains(key)) {
+              Object value = entry.getValue().getObject();
+              value = convertWikiHashes(mapCnv, value);
+              value = convertWikiLists(listCnv, value);
+              engine.put(key, value);
+          }
+      });
   }
 
   protected Object convertWikiHashes(Converter<Map> cnv, Object value) {
@@ -82,10 +82,10 @@ public class SlimExpressionEvaluator {
   protected Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
     Map<String, Object> newValue = new LinkedHashMap<>();
     newValue.putAll(value);
-    for (Map.Entry<String, Object> nestedEntry : newValue.entrySet()) {
-      Object nestedValue = convertWikiHashes(cnv, nestedEntry.getValue());
-      newValue.put(nestedEntry.getKey(), nestedValue);
-    }
+    newValue.entrySet().forEach((nestedEntry) -> {
+        Object nestedValue = convertWikiHashes(cnv, nestedEntry.getValue());
+        newValue.put(nestedEntry.getKey(), nestedValue);
+      });
     value = newValue;
     return value;
   }

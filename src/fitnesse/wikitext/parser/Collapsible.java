@@ -64,9 +64,9 @@ public class Collapsible extends SymbolType implements Rule, Translation {
 
     public static String generateHtml(String state, String titleText, String bodyText, Collection<String> extraClasses) {
         StringBuilder outerClasses = new StringBuilder("collapsible" + state);
-        for (String extraClass : extraClasses) {
+        extraClasses.forEach((extraClass) -> {
             outerClasses.append(' ').append(extraClass);
-        }
+        });
 
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", outerClasses.toString());

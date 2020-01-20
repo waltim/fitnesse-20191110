@@ -27,9 +27,9 @@ public class PageListSetUpTearDownSurrounder implements PageListSetUpTearDownPro
 
   private Map<String, List<WikiPage>> createPageSetUpTearDownGroups(List<WikiPage> pageList) {
     Map<String, List<WikiPage>> pageSetUpTearDownGroups = new LinkedHashMap<>();
-    for (WikiPage page : pageList) {
-      makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
-    }
+    pageList.forEach((page) -> {
+        makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
+      });
     return pageSetUpTearDownGroups;
   }
 
@@ -56,9 +56,9 @@ public class PageListSetUpTearDownSurrounder implements PageListSetUpTearDownPro
 
   private List<WikiPage> reinsertPagesViaSetUpTearDownGroups(Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
     List<WikiPage> pageList = new LinkedList<>();
-    for (Map.Entry<String, List<WikiPage>> entry : pageSetUpTearDownGroups.entrySet()) {
-      pageList.addAll(insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue()));
-    }
+    pageSetUpTearDownGroups.entrySet().forEach((entry) -> {
+        pageList.addAll(insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue()));
+      });
     return pageList;
   }
 

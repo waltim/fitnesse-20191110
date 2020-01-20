@@ -38,9 +38,9 @@ public class DecisionTableCaller {
 
     private void resetColumnNumberIterator() {
       columnNumberIterator = new HashMap<>();
-      for (Map.Entry<String, List<Integer>> entry : columnNumbers.entrySet()) {
-        columnNumberIterator.put(entry.getKey(), entry.getValue().iterator());
-      }
+      columnNumbers.entrySet().forEach((entry) -> {
+          columnNumberIterator.put(entry.getKey(), entry.getValue().iterator());
+        });
     }
   }
 

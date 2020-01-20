@@ -91,10 +91,12 @@ public class InstructionFactory {
   private static String wordsToString(List<Object> words) {
     StringBuilder result = new StringBuilder();
     result.append("[");
-    for (Object word : words) {
-      result.append(word);
-      result.append(",");
-    }
+    words.stream().map((word) -> {
+        result.append(word);
+          return word;
+      }).forEachOrdered((_item) -> {
+          result.append(",");
+      });
     int end = result.length() - 1;
     if (result.charAt(end) == ',') {
       result.deleteCharAt(end);

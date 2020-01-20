@@ -135,18 +135,18 @@ public class DecisionTable extends SlimTable {
 
     private Map<String, String> getArgumentsForRow(int row) {
       Map<String, String> scenarioArguments = new HashMap<>();
-      for (String var : constructorParameterStore.getLeftToRightAndResetColumnNumberIterator()) {
+      constructorParameterStore.getLeftToRightAndResetColumnNumberIterator().forEach((var) -> {
           String disgracedVar = Disgracer.disgraceMethodName(var);
           int col = constructorParameterStore.getColumnNumber(var);
           String valueToSet = table.getCellContents(col, 0);
           scenarioArguments.put(disgracedVar, valueToSet);
-      }
-      for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
-        String disgracedVar = Disgracer.disgraceMethodName(var);
-        int col = varStore.getColumnNumber(var);
-        String valueToSet = getDTCellContents(col, row);
-        scenarioArguments.put(disgracedVar, valueToSet);
-      }
+        });
+      varStore.getLeftToRightAndResetColumnNumberIterator().forEach((var) -> {
+          String disgracedVar = Disgracer.disgraceMethodName(var);
+          int col = varStore.getColumnNumber(var);
+          String valueToSet = getDTCellContents(col, row);
+          scenarioArguments.put(disgracedVar, valueToSet);
+        });
       return scenarioArguments;
     }
   }
@@ -201,9 +201,9 @@ public class DecisionTable extends SlimTable {
 
     private List<SlimAssertion> callFunctions(int row) {
       List<SlimAssertion> instructions = new ArrayList<>();
-      for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
-        instructions.add(callFunctionInRow(functionName, row));
-      }
+      funcStore.getLeftToRightAndResetColumnNumberIterator().forEach((functionName) -> {
+          instructions.add(callFunctionInRow(functionName, row));
+        });
       return instructions;
     }
 
@@ -231,24 +231,24 @@ public class DecisionTable extends SlimTable {
 
     private List<SlimAssertion> setVariables(int row) {
       List<SlimAssertion> assertions = new ArrayList<>();
-      for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
-        int col = varStore.getColumnNumber(var);
-        String valueToSet = getDTCellContents(col, row);
-
-        Object[] args = new Object[] {valueToSet};
-   	    MethodExtractorResult extractedSetter =  setterMethodExtractor.findRule(var);
-   	    if(extractedSetter != null){
-          var = extractedSetter.methodName;
-          args = extractedSetter.mergeParameters(args);
+      varStore.getLeftToRightAndResetColumnNumberIterator().forEach((var) -> {
+          int col = varStore.getColumnNumber(var);
+          String valueToSet = getDTCellContents(col, row);
+          
+          Object[] args = new Object[] {valueToSet};
+          MethodExtractorResult extractedSetter =  setterMethodExtractor.findRule(var);
+          if(extractedSetter != null){
+              var = extractedSetter.methodName;
+              args = extractedSetter.mergeParameters(args);
           }else{
-            // Default for Setter
-            var = "set " + var;
-        }
-
-        Instruction setInstruction = callFunction(getTableName(), var, args);
-        assertions.add(makeAssertion(setInstruction,
-                new VoidReturnExpectation(col, row)));
-      }
+              // Default for Setter
+              var = "set " + var;
+          }
+          
+          Instruction setInstruction = callFunction(getTableName(), var, args);
+          assertions.add(makeAssertion(setInstruction,
+                  new VoidReturnExpectation(col, row)));
+        });
       return assertions;
     }
   }

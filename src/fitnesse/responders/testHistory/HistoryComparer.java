@@ -78,10 +78,9 @@ public class HistoryComparer {
   }
 
   private boolean allMatchScoresAreHigh() {
-    for (MatchedPair match : matchedTables) {
-      if (match.matchScore < (MAX_MATCH_SCORE - .01))
-        return false;
-    }
+      if (!matchedTables.stream().noneMatch((match) -> (match.matchScore < (MAX_MATCH_SCORE - .01)))) {
+          return false;
+      }
     return true;
   }
 

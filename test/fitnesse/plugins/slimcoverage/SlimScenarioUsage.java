@@ -20,77 +20,67 @@ public class SlimScenarioUsage {
 
     public SlimScenarioUsagePer getScenarioUsage() {
         SlimScenarioUsagePer result = new SlimScenarioUsagePer("Total per scenario");
-        for (SlimScenarioUsagePer value : usagePerPage.values()) {
-            for (Map.Entry<String, Integer> entry : value.getUsage().entrySet()) {
+        usagePerPage.values().forEach((value) -> {
+            value.getUsage().entrySet().forEach((entry) -> {
                 result.addUsage(entry.getKey(), entry.getValue());
-            }
-        }
+            });
+        });
         return result;
     }
 
     public Collection<String> getUnusedScenarios() {
         List<String> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> usage : getScenarioUsage().getUsage().entrySet()) {
-            if (usage.getValue() < 1) {
-                result.add(usage.getKey());
-            }
-        }
+        getScenarioUsage().getUsage().entrySet().stream().filter((usage) -> (usage.getValue() < 1)).forEachOrdered((usage) -> {
+            result.add(usage.getKey());
+        });
         return result;
     }
 
     public Collection<String> getUsedScenarios() {
         List<String> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> usage : getScenarioUsage().getUsage().entrySet()) {
-            if (usage.getValue() > 0) {
-                result.add(usage.getKey());
-            }
-        }
+        getScenarioUsage().getUsage().entrySet().stream().filter((usage) -> (usage.getValue() > 0)).forEachOrdered((usage) -> {
+            result.add(usage.getKey());
+        });
         return result;
     }
 
     public Collection<String> getOverriddenScenarios() {
         Set<String> result = new HashSet<>();
-        for (Map.Entry<String, Collection<String>> usage : getOverriddenScenariosPerPage().entrySet()) {
+        getOverriddenScenariosPerPage().entrySet().forEach((usage) -> {
             result.addAll(usage.getValue());
-        }
+        });
         return result;
     }
 
     public Map<String, Collection<String>> getOverriddenScenariosPerPage() {
         Map<String, Collection<String>> result = new LinkedHashMap<>();
-        for (Map.Entry<String, SlimScenarioUsagePer> value : usagePerPage.entrySet()) {
-            if (!value.getValue().getOverriddenScenarios().isEmpty()) {
-                result.put(value.getKey(), value.getValue().getOverriddenScenarios());
-            }
-        }
+        usagePerPage.entrySet().stream().filter((value) -> (!value.getValue().getOverriddenScenarios().isEmpty())).forEachOrdered((value) -> {
+            result.put(value.getKey(), value.getValue().getOverriddenScenarios());
+        });
         return result;
     }
 
     public Map<String, Collection<String>> getPagesUsingScenario() {
         Map<String, Collection<String>> result = new LinkedHashMap<>();
-        for (Map.Entry<String, SlimScenarioUsagePer> value : usagePerPage.entrySet()) {
+        usagePerPage.entrySet().forEach((value) -> {
             String page = value.getKey();
-            for (Map.Entry<String, Integer> entry : value.getValue().getUsage().entrySet()) {
-                if (entry.getValue() > 0) {
-                    String scenario = entry.getKey();
-                    Collection<String> pagesUsingScenario = getOrCreateCollection(result, scenario);
-                    pagesUsingScenario.add(page);
-                }
-            }
-        }
+            value.getValue().getUsage().entrySet().stream().filter((entry) -> (entry.getValue() > 0)).map((entry) -> entry.getKey()).map((scenario) -> getOrCreateCollection(result, scenario)).forEachOrdered((pagesUsingScenario) -> {
+                pagesUsingScenario.add(page);
+            });
+        });
         return result;
     }
 
     public Map<String, Collection<String>> getScenariosBySmallestScope() {
         Map<String, Collection<String>> result = new LinkedHashMap<>();
         Map<String, Collection<String>> pagesPerScenario = getPagesUsingScenario();
-        for (Map.Entry<String, Collection<String>> ppsEntry : pagesPerScenario.entrySet()) {
+        pagesPerScenario.entrySet().forEach((ppsEntry) -> {
             String scenario = ppsEntry.getKey();
             Collection<String> pages = ppsEntry.getValue();
             String scope = getLongestSharedPath(pages);
             Collection<String> scenariosForScope = getOrCreateCollection(result, scope);
             scenariosForScope.add(scenario);
-        }
+        });
         return result;
     }
 

@@ -102,11 +102,11 @@ public class PageTypeTest {
   public void pageTypeFromPageName() {
     Collection<Object[]> testData = pageTypeFromPageNameData();
 
-    for (Object[] testItem: testData) {
-      PageType pageType = (PageType) testItem[0];
-      String pageName = (String) testItem[1];
-      assertEquals(pageType, getPageTypeForPageName(pageName));
-    }
+    testData.forEach((testItem) -> {
+        PageType pageType = (PageType) testItem[0];
+        String pageName = (String) testItem[1];
+        assertEquals(pageType, getPageTypeForPageName(pageName));
+      });
   }
 
 }

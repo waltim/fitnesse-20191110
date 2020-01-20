@@ -15,15 +15,13 @@ public class TemplateUtil {
 
   public static List<String> getTemplatesFromUncles(WikiPage page) {
     final List<String> templatePaths = new ArrayList<>();
-    page.getPageCrawler().traverseUncles("TemplateLibrary", new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage uncle) {
-        for (WikiPage template : uncle.getChildren()) {
-          WikiPagePath templatePath = new WikiPagePath(template);
-          templatePath.makeAbsolute();
-          templatePaths.add(PathParser.render(templatePath));
-        }
-      }
+    page.getPageCrawler().traverseUncles("TemplateLibrary", (WikiPage uncle) -> {
+        uncle.getChildren().stream().map((template) -> new WikiPagePath(template)).map((templatePath) -> {
+            templatePath.makeAbsolute();
+            return templatePath;
+        }).forEachOrdered((templatePath) -> {
+            templatePaths.add(PathParser.render(templatePath));
+        });
     });
     return templatePaths;
   }
@@ -46,12 +44,12 @@ public class TemplateUtil {
 
   static Map<String, String> getPageNames(List<String> templatePaths) {
     Map<String, String> pathsAndNames = new TreeMap<>();
-    for(String path : templatePaths){
-      final String pageName = getPageName(path);
-      if (!pathsAndNames.containsKey(pageName)) {
-        pathsAndNames.put(pageName, path);
-      }
-    }
+    templatePaths.forEach((path) -> {
+        final String pageName = getPageName(path);
+          if (!pathsAndNames.containsKey(pageName)) {
+              pathsAndNames.put(pageName, path);
+          }
+      });
     return pathsAndNames;
   }
 
@@ -61,9 +59,9 @@ public class TemplateUtil {
 
   static Map<String, String> getShortTemplateNames(List<String> templatePaths) {
     Map<String, String> pathsAndNames = new TreeMap<>();
-    for(String path : templatePaths){
-      pathsAndNames.put(getShortTemplateName(path), path);
-    }
+    templatePaths.forEach((path) -> {
+        pathsAndNames.put(getShortTemplateName(path), path);
+      });
     return pathsAndNames;
   }
 

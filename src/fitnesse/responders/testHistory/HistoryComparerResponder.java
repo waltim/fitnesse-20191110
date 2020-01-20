@@ -96,11 +96,9 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private boolean setFileNames(Set<String> keys) {
-    for (String key : keys) {
-      if (key.contains("TestResult_"))
-        if (setFileNames(key))
+      if (!keys.stream().filter((key) -> (key.contains("TestResult_"))).noneMatch((key) -> (setFileNames(key)))) {
           return false;
-    }
+      }
     return !(firstFileName.equals("") || secondFileName.equals(""));
   }
 

@@ -70,10 +70,9 @@ public class PageXmlizer {
   }
 
   private boolean pageMeetsConditions(WikiPage page) {
-    for (XmlizePageCondition xmlizePageCondition : pageConditions) {
-      if (!xmlizePageCondition.canBeXmlized(page))
-        return false;
-    }
+      if (!pageConditions.stream().noneMatch((xmlizePageCondition) -> (!xmlizePageCondition.canBeXmlized(page)))) {
+          return false;
+      }
     return true;
   }
 
@@ -98,9 +97,9 @@ public class PageXmlizer {
     List<WikiPage> children = page.getChildren();
     Collections.sort(children);
 
-    for (WikiPage child : children) {
-      addPageXmlToElement(childrenElement, child);
-    }
+    children.forEach((child) -> {
+        addPageXmlToElement(childrenElement, child);
+      });
     pageElement.appendChild(childrenElement);
   }
 

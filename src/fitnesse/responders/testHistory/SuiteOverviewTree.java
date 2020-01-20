@@ -20,11 +20,9 @@ public class SuiteOverviewTree {
   }
 
   private void makeTree(List<String> pageList) {
-    for (String pageName : pageList)
-    {
-      String[] splits = pageName.split("\\.");
-      treeRoot.addItem(splits, 0);
-    }
+      pageList.stream().map((pageName) -> pageName.split("\\.")).forEachOrdered((splits) -> {
+          treeRoot.addItem(splits, 0);
+      });
     compactTree();
   }
 
@@ -35,13 +33,13 @@ public class SuiteOverviewTree {
   private static List<String> convertToPageList(List<WikiPage> wikiPagelist) {
     List<String> allPages = new LinkedList<>();
 
-    for (WikiPage aPage : wikiPagelist)  {
-      try {
-        allPages.add(aPage.getFullPath().toString());
-      } catch (Exception e) {
-        allPages.add("There was also a probem getting the path of one page.");
-      }
-    }
+    wikiPagelist.forEach((aPage) -> {
+        try {
+            allPages.add(aPage.getFullPath().toString());
+        } catch (Exception e) {
+            allPages.add("There was also a probem getting the path of one page.");
+        }
+      });
     return allPages;
   }
 
@@ -209,11 +207,15 @@ public class SuiteOverviewTree {
         }
       }
       else {
-        for (TreeItem branch : branches) {
-          testsUnrun += branch.testsUnrun;
-          testsPassed += branch.testsPassed;
-          testsFailed += branch.testsFailed;
-        }
+          branches.stream().map((branch) -> {
+              testsUnrun += branch.testsUnrun;
+              return branch;
+          }).map((branch) -> {
+              testsPassed += branch.testsPassed;
+              return branch;
+          }).forEachOrdered((branch) -> {
+              testsFailed += branch.testsFailed;
+          });
       }
     }
 
@@ -264,9 +266,9 @@ public class SuiteOverviewTree {
         method.doMethod(this);
       }
 
-      for (TreeItem branch : branches)  {
-        branch.doRecursive(method, level + 1);
-      }
+      branches.forEach((branch) -> {
+          branch.doRecursive(method, level + 1);
+        });
 
       if (!method.shouldDoItemBeforeBranches() && (level != 0)) {
         method.doMethod(this);

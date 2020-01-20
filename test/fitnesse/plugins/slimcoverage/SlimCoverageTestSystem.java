@@ -105,9 +105,9 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
             if (!unused.isEmpty()) {
                 reportScenarioUsageHeader("Unused scenarios:");
                 testOutputChunk("<ul>");
-                for (String scenarioName : unused) {
+                unused.forEach((scenarioName) -> {
                     testOutputChunk("<li>" + scenarioName + "</li>");
-                }
+                });
                 testOutputChunk("</ul>");
                 reportScenarioUsageNewline();
             }
@@ -115,51 +115,73 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
             reportScenarioUsageHeader("Total usage count per scenario:");
             testOutputChunk("<table>");
             testOutputChunk("<tr><th>Scenario</th><th>Count</th></tr>");
-            for (Map.Entry<String, Integer> totalUsageEntry : totalUsage.entrySet()) {
+            totalUsage.entrySet().stream().map((totalUsageEntry) -> {
                 testOutputChunk("<tr>");
+                return totalUsageEntry;
+            }).map((totalUsageEntry) -> {
                 testOutputChunk("<td>");
+                return totalUsageEntry;
+            }).map((totalUsageEntry) -> {
                 testOutputChunk(totalUsageEntry.getKey()
                         + "</td><td>"
                         + totalUsageEntry.getValue());
+                return totalUsageEntry;
+            }).map((_item) -> {
                 testOutputChunk("</td>");
+                return _item;
+            }).forEachOrdered((_item) -> {
                 testOutputChunk("</tr>");
-            }
+            });
             testOutputChunk("</table>");
             reportScenarioUsageNewline();
 
             reportScenarioUsageHeader("Scenarios grouped by usage scope:");
             testOutputChunk("<ul>");
-            for (Map.Entry<String, Collection<String>> sByScopeEntry : usage.getScenariosBySmallestScope().entrySet()) {
+            usage.getScenariosBySmallestScope().entrySet().stream().map((sByScopeEntry) -> {
                 String scope = sByScopeEntry.getKey();
                 testOutputChunk("<li>");
                 testOutputChunk(scope);
                 testOutputChunk("<ul>");
-                for (String scenario : sByScopeEntry.getValue()) {
+                return sByScopeEntry;
+            }).map((sByScopeEntry) -> {
+                sByScopeEntry.getValue().forEach((scenario) -> {
                     testOutputChunk("<li>" + scenario + "</li>");
-                }
+                });
+                return sByScopeEntry;
+            }).map((_item) -> {
                 testOutputChunk("</ul>");
+                return _item;
+            }).forEachOrdered((_item) -> {
                 testOutputChunk("</li>");
-            }
+            });
             testOutputChunk("</ul>");
             reportScenarioUsageNewline();
 
             reportScenarioUsageHeader("Usage count per scenario per page:");
             testOutputChunk("<table>");
             testOutputChunk("<tr><th>Page</th><th>Scenario</th><th>Count</th></tr>");
-            for (SlimScenarioUsagePer usagePerPage : usage.getUsage()) {
+            usage.getUsage().forEach((usagePerPage) -> {
                 String pageName = usagePerPage.getGroupName();
-                for (Map.Entry<String, Integer> usagePerScenario : usagePerPage.getUsage().entrySet()) {
+                usagePerPage.getUsage().entrySet().stream().map((usagePerScenario) -> {
                     testOutputChunk("<tr>");
+                    return usagePerScenario;
+                }).map((usagePerScenario) -> {
                     testOutputChunk("<td>");
+                    return usagePerScenario;
+                }).map((usagePerScenario) -> {
                     testOutputChunk(pageName
                             + "</td><td>"
                             + usagePerScenario.getKey()
                             + "</td><td>"
                             + usagePerScenario.getValue());
+                    return usagePerScenario;
+                }).map((_item) -> {
                     testOutputChunk("</td>");
+                    return _item;
+                }).forEachOrdered((_item) -> {
                     testOutputChunk("</tr>");
-                }
-            }
+                });
+            });
             testOutputChunk("</table>");
 
             Map<String, Collection<String>> overriddenPerPage = usage.getOverriddenScenariosPerPage();
@@ -167,17 +189,23 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
                 reportScenarioUsageNewline();
                 reportScenarioUsageHeader("Overridden scenario(s) per page:");
                 testOutputChunk("<ul>");
-                for (Map.Entry<String, Collection<String>> overriddenForPage : overriddenPerPage.entrySet()) {
+                overriddenPerPage.entrySet().stream().map((overriddenForPage) -> {
                     String pageName = overriddenForPage.getKey();
                     testOutputChunk("<li>");
                     testOutputChunk(pageName);
                     testOutputChunk("<ul>");
-                    for (String scenario : overriddenForPage.getValue()) {
+                    return overriddenForPage;
+                }).map((overriddenForPage) -> {
+                    overriddenForPage.getValue().forEach((scenario) -> {
                         testOutputChunk("<li>" + scenario + "</li>");
-                    }
+                    });
+                    return overriddenForPage;
+                }).map((_item) -> {
                     testOutputChunk("</ul>");
+                    return _item;
+                }).forEachOrdered((_item) -> {
                     testOutputChunk("</li>");
-                }
+                });
                 testOutputChunk("</ul>");
             }
         }

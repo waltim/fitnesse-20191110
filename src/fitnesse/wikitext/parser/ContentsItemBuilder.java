@@ -30,9 +30,9 @@ public class ContentsItemBuilder {
     public HtmlTag buildLevel(SourcePage page) {
         HtmlTag list = new HtmlTag("ul");
         list.addAttribute("class", "toc" + level);
-        for (SourcePage child: getSortedChildren(page)) {
+        getSortedChildren(page).forEach((child) -> {
             list.add(buildListItem(child));
-        }
+        });
         return list;
     }
 
@@ -117,8 +117,8 @@ public class ContentsItemBuilder {
     }
 
     private boolean hasOption(String option, String variableName) {
-        for (Symbol child: contents.getChildren()) {
-           if (child.getContent().equals(option)) return true;
+        if (contents.getChildren().stream().anyMatch((child) -> (child.getContent().equals(option)))) {
+            return true;
         }
         return !variableName.isEmpty()
                 && contents.getVariable(variableName, "").equals("true");

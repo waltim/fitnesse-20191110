@@ -132,9 +132,9 @@ public class MultipleTestsRunner implements Stoppable {
         public ClassPath getClassPath() {
           if (classPath == null) {
             List<ClassPath> paths = new ArrayList<>();
-            for (TestPage testPage: testPages) {
-              paths.add(testPage.getClassPath());
-            }
+            testPages.forEach((testPage) -> {
+                paths.add(testPage.getClassPath());
+              });
             classPath = new ClassPath(paths);
           }
           return classPath;

@@ -32,11 +32,12 @@ public class SlimSerializer {
     result.append('[');
     appendLength(list.size());
 
-    for (Object o : list) {
-      String s = marshalObjectToString(o);
-      appendLength(s.length());
-      appendString(s);
-    }
+    list.stream().map((o) -> marshalObjectToString(o)).map((s) -> {
+        appendLength(s.length());
+          return s;
+      }).forEachOrdered((s) -> {
+          appendString(s);
+      });
     result.append(']');
     return result.toString();
   }

@@ -28,9 +28,9 @@ public class MockWikiImporter extends WikiImporter {
 
   @Override
   public void importWiki(WikiPage page) {
-    for (WikiPage child : page.getChildren()) {
-      child.getPageCrawler().traverse(this, new NoPruningStrategy());
-    }
+      page.getChildren().forEach((child) -> {
+          child.getPageCrawler().traverse(this, new NoPruningStrategy());
+      });
   }
 
   @Override

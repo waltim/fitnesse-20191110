@@ -29,11 +29,8 @@ public class ClassPathBuilder {
   private List<String> getInheritedPathElements(WikiPage page) {
     final List<String> items = new ArrayList<>();
 
-    page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage p) {
+    page.getPageCrawler().traversePageAndAncestors((WikiPage p) -> {
         items.addAll(getItemsFromPage(p));
-      }
     });
     return items;
   }
@@ -55,8 +52,9 @@ public class ClassPathBuilder {
 
   private List<String> expandWildcards(List<String> paths) {
     List<String> allPaths = new ArrayList<>();
-    for (String path : paths)
-      allPaths.addAll(expandWildcard(path));
+    paths.forEach((path) -> {
+        allPaths.addAll(expandWildcard(path));
+      });
     return allPaths;
   }
 

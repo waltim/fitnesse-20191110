@@ -35,9 +35,9 @@ public class SlimScenarioUsagePer {
 
     public Map<String, Integer> getUsage() {
         Map<String, Integer> result = new LinkedHashMap<>();
-        for (Map.Entry<String, AtomicInteger> entry : usage.entrySet()) {
+        usage.entrySet().forEach((entry) -> {
             result.put(entry.getKey(), entry.getValue().intValue());
-        }
+        });
         return result;
     }
 

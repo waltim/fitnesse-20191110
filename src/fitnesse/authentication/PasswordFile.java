@@ -51,12 +51,9 @@ public class PasswordFile {
   }
 
   private void loadPasswords(LinkedList<String> lines) {
-    for (String line : lines) {
-      if (!"".equals(line)) {
-        String[] tokens = line.split(":");
-        passwordMap.put(tokens[0], tokens[1]);
-      }
-    }
+      lines.stream().filter((line) -> (!"".equals(line))).map((line) -> line.split(":")).forEachOrdered((tokens) -> {
+          passwordMap.put(tokens[0], tokens[1]);
+      });
   }
 
   private void loadCipher(LinkedList<String> lines) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
@@ -78,11 +75,11 @@ public class PasswordFile {
   private void savePasswords() throws IOException {
     List<String> lines = new LinkedList<>();
     lines.add("!" + cipher.getClass().getName());
-    for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
-      String user = entry.getKey();
-      String password = entry.getValue();
-      lines.add(user + ":" + password);
-    }
+    passwordMap.entrySet().forEach((entry) -> {
+        String user = entry.getKey();
+        String password = entry.getValue();
+        lines.add(user + ":" + password);
+      });
     FileUtil.writeLinesToFile(passwordFile, lines);
   }
 

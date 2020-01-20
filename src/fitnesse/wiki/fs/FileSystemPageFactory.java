@@ -77,11 +77,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
 
   @Override // from WikiPageFactory
   public boolean supports(File path) {
-    for (WikiPageFactory factory : wikiPageFactories) {
-      if (factory.supports(path)) {
-        return true;
+      if (wikiPageFactories.stream().anyMatch((factory) -> (factory.supports(path)))) {
+          return true;
       }
-    }
     return false;
   }
 

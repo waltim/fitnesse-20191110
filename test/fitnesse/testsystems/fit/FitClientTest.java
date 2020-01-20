@@ -162,9 +162,9 @@ public class FitClientTest implements FitClientListener {
 
     assertFalse(exceptionOccurred);
     StringBuilder buffer = new StringBuilder();
-    for (String output : outputs) {
-      buffer.append(output);
-    }
+    outputs.forEach((output) -> {
+        buffer.append(output);
+      });
 
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }

@@ -37,9 +37,9 @@ public class FixtureName {
     List<String> candidateClassNames = new ArrayList<>();
 
     if (!isFullyQualified()) {
-      for (String packageName : fixturePathElements) {
-        addBlahAndBlahFixture(packageName + ".", candidateClassNames);
-      }
+        fixturePathElements.forEach((packageName) -> {
+            addBlahAndBlahFixture(packageName + ".", candidateClassNames);
+        });
     }
     addBlahAndBlahFixture("", candidateClassNames);
 

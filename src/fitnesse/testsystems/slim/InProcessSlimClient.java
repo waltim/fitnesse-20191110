@@ -49,16 +49,14 @@ public class InProcessSlimClient implements SlimClient {
     socket = new MockSocket(socketInput, socketOutput);
     // Start SlimServer in a separate thread
 
-    slimServerThread = new Thread(new Runnable() {
-      @Override public void run() {
+    slimServerThread = new Thread(() -> {
         try {
-          slimServer.serve(socket);
-          executionLogListener.exitCode(0);
+            slimServer.serve(socket);
+            executionLogListener.exitCode(0);
         } catch (Throwable t) { // NOSONAR
-          // This point is not reached since no errors bubble up this far
-          executionLogListener.exceptionOccurred(t);
+            // This point is not reached since no errors bubble up this far
+            executionLogListener.exceptionOccurred(t);
         }
-      }
     });
     slimServerThread.setContextClassLoader(classLoader);
     slimServerThread.start();

@@ -21,7 +21,9 @@ public class WikiSourcePageTest {
         root.makePage(page, "PageThree");
         WikiSourcePage source = new WikiSourcePage(page);
         ArrayList<String> names = new ArrayList<>();
-        for (SourcePage child: source.getChildren()) names.add(child.getName());
+        source.getChildren().forEach((child) -> {
+            names.add(child.getName());
+        });
 
         assertEquals(2, names.size());
         assertTrue(names.contains("PageTwo"));

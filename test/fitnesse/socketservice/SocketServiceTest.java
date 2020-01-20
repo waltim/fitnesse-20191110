@@ -22,11 +22,8 @@ public class SocketServiceTest {
   private static final int PORT_NUMBER = 1999;
 
   public SocketServiceTest() {
-    connectionCounter = new SocketServer() {
-      @Override
-      public void serve(Socket s) {
+    connectionCounter = (Socket s) -> {
         connections++;
-      }
     };
   }
 

@@ -76,25 +76,20 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   private void removeOrphans(WikiPage context) {
-    for (WikiPagePath orphan : orphans) {
-      WikiPagePath path = orphan;
-      WikiPage wikiPage = context.getPageCrawler().getPage(path);
-      if (wikiPage != null)
-        wikiPage.remove();
-    }
+      orphans.stream().map((orphan) -> orphan).map((path) -> context.getPageCrawler().getPage(path)).filter((wikiPage) -> (wikiPage != null)).forEachOrdered((wikiPage) -> {
+          wikiPage.remove();
+      });
   }
 
   private void filterOrphans(WikiPage context) {
-    for (WikiPagePath aPageCatalog : pageCatalog) {
-      WikiPagePath wikiPagePath = aPageCatalog;
-      WikiPage unrecognizedPage = context.getPageCrawler().getPage(wikiPagePath);
-      PageData data = unrecognizedPage.getData();
-      WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
-
-      if (importProps != null && !importProps.isRoot()) {
-        orphans.add(wikiPagePath);
-      }
-    }
+      pageCatalog.stream().map((aPageCatalog) -> aPageCatalog).forEachOrdered((wikiPagePath) -> {
+          WikiPage unrecognizedPage = context.getPageCrawler().getPage(wikiPagePath);
+          PageData data = unrecognizedPage.getData();
+          WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
+          if (importProps != null && !importProps.isRoot()) {
+              orphans.add(wikiPagePath);
+          }
+      });
   }
 
   private void catalogLocalTree(WikiPage page) {

@@ -78,9 +78,9 @@ public class ContextConfigurator {
   }
 
   public ContextConfigurator updatedWith(Properties newProperties) {
-    for (String key : newProperties.stringPropertyNames()) {
-      withParameter(key, newProperties.getProperty(key));
-    }
+      newProperties.stringPropertyNames().forEach((key) -> {
+          withParameter(key, newProperties.getProperty(key));
+      });
     return this;
   }
 

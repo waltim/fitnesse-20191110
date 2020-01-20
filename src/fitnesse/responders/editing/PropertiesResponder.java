@@ -218,12 +218,12 @@ public class PropertiesResponder implements SecureResponder {
       return;
     List<Symlink> symlinks = new ArrayList<>();
     Set<String> symbolicLinkNames = symLinksProperty.keySet();
-    for (String name : symbolicLinkNames) {
-      String link = symLinksProperty.get(name);
-
-      String path = makePathForSymbolicLink(link);
-      symlinks.add(new Symlink(name, HtmlUtil.escapeHTML(link), path));
-    }
+    symbolicLinkNames.forEach((name) -> {
+        String link = symLinksProperty.get(name);
+        
+        String path = makePathForSymbolicLink(link);
+        symlinks.add(new Symlink(name, HtmlUtil.escapeHTML(link), path));
+      });
     html.put("symlinks", symlinks);
   }
 

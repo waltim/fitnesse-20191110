@@ -188,11 +188,9 @@ public class SlimCommandRunningClient implements SlimClient {
 
   public static Map<String, Object> resultToMap(List<?> slimResults) {
     Map<String, Object> map = new HashMap<>();
-    for (Object aResult : slimResults) {
-      @SuppressWarnings("unchecked")
-      List<Object> resultList = (List<Object>) aResult;
-      map.put((String) resultList.get(0), resultList.get(1));
-    }
+    slimResults.stream().map((aResult) -> (List<Object>) aResult).forEachOrdered((resultList) -> {
+        map.put((String) resultList.get(0), resultList.get(1));
+      });
     return map;
   }
 }

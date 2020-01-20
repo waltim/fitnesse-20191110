@@ -98,9 +98,9 @@ public class SlimTestContextImpl implements SlimTestContext {
     int initialCapacity = scenarios.size();
     scenariosWithInputs = new ArrayList<>(initialCapacity);
     isSorted = true;
-    for (ScenarioTable table : scenarios.values()) {
-      addToScenariosWithInputsIfNeeded(table);
-    }
+    scenarios.values().forEach((table) -> {
+        addToScenariosWithInputsIfNeeded(table);
+      });
   }
 
   private void maintainScenariosWithInputs(ScenarioTable oldTable, ScenarioTable newTable) {

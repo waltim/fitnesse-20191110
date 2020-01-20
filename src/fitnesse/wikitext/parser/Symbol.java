@@ -86,8 +86,8 @@ public class Symbol {
 
     public boolean walkPostOrder(SymbolTreeWalker walker) {
         if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPostOrder(walker)) return false;
+            if (!children.stream().noneMatch((child) -> (!child.walkPostOrder(walker)))) {
+                return false;
             }
         }
         return walker.visit(this);
@@ -96,8 +96,8 @@ public class Symbol {
     public boolean walkPreOrder(SymbolTreeWalker walker) {
         if (!walker.visit(this)) return false;
         if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPreOrder(walker)) return false;
+            if (!children.stream().noneMatch((child) -> (!child.walkPreOrder(walker)))) {
+                return false;
             }
         }
         return true;

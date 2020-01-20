@@ -61,9 +61,9 @@ public class SlimTableFactoryTest {
 
   @Test
   public void shouldCreateCorrectSlimTableForTablesType() {
-        for (Entry<String, Class<? extends SlimTable>> entry : map.entrySet()) {
-      assertThatTableTypeCreateSlimTableType(entry.getKey(), entry.getValue());
-    }
+      map.entrySet().forEach((entry) -> {
+          assertThatTableTypeCreateSlimTableType(entry.getKey(), entry.getValue());
+      });
   }
 
   private void assertThatTableTypeCreateSlimTableType(String tableType, Class<? extends SlimTable> expectedClass) {

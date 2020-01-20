@@ -162,14 +162,11 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
     try {
       addToResponse("<span class=\"meta\">Updating imported content...</span><span class=\"meta\">");
-      new WikiImportingTraverser(wikiImporter, page).traverse(new TraversalListener<Object>() {
-        @Override
-        public void process(Object pageOrError) {
+      new WikiImportingTraverser(wikiImporter, page).traverse((Object pageOrError) -> {
           if (pageOrError instanceof ImportError) {
-            ImportError error = (ImportError) pageOrError;
-            addToResponse(" " + error.toString() + ".");
+              ImportError error = (ImportError) pageOrError;
+              addToResponse(" " + error.toString() + ".");
           }
-        }
       });
       addToResponse(" Done.");
       // Refresh data, since it might have changed.

@@ -26,14 +26,9 @@ public class SymbolProviderTest {
    }
 
   private void assertMatches(SymbolProvider testProvider, final SymbolMatch expected, char startCharacter) {
-    SymbolMatch result = testProvider.findMatch(startCharacter, new SymbolMatcher() {
-      @Override
-      public SymbolMatch makeMatch(Matchable candidate) {
-        return candidate.matchesFor(SymbolType.OpenBrace)
-                ? testMatch
-                : SymbolMatch.noMatch;
-      }
-    });
+    SymbolMatch result = testProvider.findMatch(startCharacter, (Matchable candidate) -> candidate.matchesFor(SymbolType.OpenBrace)
+            ? testMatch
+            : SymbolMatch.noMatch);
     assertSame(expected, result);
   }
 

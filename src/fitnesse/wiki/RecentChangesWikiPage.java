@@ -101,9 +101,9 @@ public class RecentChangesWikiPage implements RecentChanges {
 
   private String convertLinesToWikiText(List<String> lines) {
     StringBuilder buffer = new StringBuilder();
-    for (String line : lines) {
-      buffer.append(line).append("\n");
-    }
+    lines.forEach((line) -> {
+        buffer.append(line).append("\n");
+      });
     return buffer.toString();
   }
 

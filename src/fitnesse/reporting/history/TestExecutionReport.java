@@ -117,9 +117,9 @@ public class TestExecutionReport extends ExecutionReport {
 
   public TestSummary getAssertionCounts() {
     TestSummary assertionCounts = new TestSummary();
-    for (TestResult result : results) {
-      assertionCounts.add(result.getTestSummary());
-    }
+    results.forEach((result) -> {
+        assertionCounts.add(result.getTestSummary());
+      });
     return assertionCounts;
   }
 

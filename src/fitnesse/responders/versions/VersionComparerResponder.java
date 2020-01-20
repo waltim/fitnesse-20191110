@@ -74,11 +74,9 @@ public class VersionComparerResponder implements Responder {
   private boolean setFileNames(Set<String> keys) {
     List<String> sortedkeys = Arrays.asList(keys.toArray(new String[keys.size()]));
     Collections.sort(sortedkeys);
-    for (String key : sortedkeys) {
-      if (key.contains("Version_"))
-        if (setFileNames(key))
+      if (!sortedkeys.stream().filter((key) -> (key.contains("Version_"))).noneMatch((key) -> (setFileNames(key)))) {
           return false;
-    }
+      }
     return !(firstVersion.equals("") || secondVersion.equals(""));
   }
 

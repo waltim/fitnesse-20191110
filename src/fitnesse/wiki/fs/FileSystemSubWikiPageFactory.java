@@ -49,11 +49,9 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     WikiPageProperty props = page.getData().getProperties();
     WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty != null) {
-      for (String linkName : symLinksProperty.keySet()) {
-        WikiPage linkedPage = createSymbolicPage(page, linkName);
-        if (linkedPage != null && !children.contains(linkedPage))
-          children.add(linkedPage);
-      }
+        symLinksProperty.keySet().stream().map((linkName) -> createSymbolicPage(page, linkName)).filter((linkedPage) -> (linkedPage != null && !children.contains(linkedPage))).forEachOrdered((linkedPage) -> {
+            children.add(linkedPage);
+        });
     }
     return children;
   }

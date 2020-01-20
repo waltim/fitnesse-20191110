@@ -165,12 +165,16 @@ public class MapConverterTest {
       }
 
       StringBuilder messageList = new StringBuilder("<ol start=\"0\">");
-      for (Object element : list) {
-        messageList.append("<li>");
-        String formattedElement = ElementConverterHelper.elementToString(element);
-        messageList.append(formattedElement);
-        messageList.append("</li>");
-      }
+      list.stream().map((element) -> {
+          messageList.append("<li>");
+          String formattedElement = ElementConverterHelper.elementToString(element);
+            return formattedElement;
+        }).map((formattedElement) -> {
+            messageList.append(formattedElement);
+            return formattedElement;
+        }).forEachOrdered((_item) -> {
+            messageList.append("</li>");
+        });
       messageList.append("</ol>");
       return messageList.toString();
     }

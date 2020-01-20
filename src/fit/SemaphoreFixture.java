@@ -87,8 +87,8 @@ public class SemaphoreFixture extends Fixture {
   }
 
   public static void ClearSemaphores() {
-    for (String semaphore : semaphores) {
-      unlockSemaphore(semaphore);
-    }
+      semaphores.forEach((semaphore) -> {
+          unlockSemaphore(semaphore);
+      });
   }
 }

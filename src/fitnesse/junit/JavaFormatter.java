@@ -255,9 +255,9 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
     public String toString() {
       StringBuilder sb = new StringBuilder();
       sb.append(SUMMARY_HEADER);
-      for (String s : visitedTestPages) {
-        sb.append(summaryRow(s, testSummaries.get(s)));
-      }
+      visitedTestPages.forEach((s) -> {
+          sb.append(summaryRow(s, testSummaries.get(s)));
+        });
       sb.append(SUMMARY_FOOTER);
       return sb.toString();
     }

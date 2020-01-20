@@ -60,10 +60,10 @@ public class PluginsClassLoaderFactory {
 
     StringBuilder classpathItems = new StringBuilder();
     classpathItems.append(currentClassPath);
-    for (String plugin : plugins) {
-      classpathItems.append(File.pathSeparator);
-      classpathItems.append(plugin);
-    }
+    plugins.forEach((plugin) -> {
+        classpathItems.append(File.pathSeparator);
+        classpathItems.append(plugin);
+      });
     System.setProperty("java.class.path", classpathItems.toString());
   }
 }

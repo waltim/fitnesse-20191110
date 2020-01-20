@@ -62,9 +62,9 @@ public class SymbolicPage extends BaseWikitextPage {
   public List<WikiPage> getChildren() {
     List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<>();
-    for (WikiPage child : children) {
-      symChildren.add(createChildPage(child));
-    }
+    children.forEach((child) -> {
+        symChildren.add(createChildPage(child));
+      });
     return symChildren;
   }
 

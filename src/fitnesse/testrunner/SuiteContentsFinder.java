@@ -46,22 +46,18 @@ public class SuiteContentsFinder {
   private List<WikiPage> getAllTestPagesUnder() {
     List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
-    Collections.sort(testPages, new Comparator<WikiPage>() {
-      @Override
-      public int compare(WikiPage p1, WikiPage p2) {
+    Collections.sort(testPages, (WikiPage p1, WikiPage p2) -> {
         try {
-          WikiPagePath path1 = p1.getFullPath();
-          WikiPagePath path2 = p2.getFullPath();
-
-          return path1.compareTo(path2);
+            WikiPagePath path1 = p1.getFullPath();
+            WikiPagePath path2 = p2.getFullPath();
+            
+            return path1.compareTo(path2);
         }
         catch (Exception e) {
-          LOG.log(Level.WARNING, "Unable to compare " + p1 + " and " + p2, e);
-          return 0;
+            LOG.log(Level.WARNING, "Unable to compare " + p1 + " and " + p2, e);
+            return 0;
         }
-      }
-    }
-    );
+    });
 
     return testPages;
   }
@@ -75,9 +71,9 @@ public class SuiteContentsFinder {
 
     SuiteFilter suiteFilterForChildren = includePage ? suiteFilter.getFilterForTestsInSuite(page) : SuiteFilter.NO_MATCHING;
 
-    for (WikiPage child : getChildren(page)) {
-      testPages.addAll(addTestPagesToSuite(child, suiteFilterForChildren));
-    }
+    getChildren(page).forEach((child) -> {
+        testPages.addAll(addTestPagesToSuite(child, suiteFilterForChildren));
+      });
     return testPages;
   }
 
@@ -104,8 +100,9 @@ public class SuiteContentsFinder {
   private void addAllXRefs(List<WikiPage> xrefPages, WikiPage page) {
     List<WikiPage> children = page.getChildren();
     addXrefPages(xrefPages, page);
-    for (WikiPage child: children)
-       addAllXRefs(xrefPages, child);
+    children.forEach((child) -> {
+        addAllXRefs(xrefPages, child);
+      });
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
@@ -113,11 +110,8 @@ public class SuiteContentsFinder {
     if (pageReferences.isEmpty()) {
       return;
     }
-    for (String pageReference : pageReferences) {
-      WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = thePage.getPageCrawler().getSiblingPage(path);
-      if (referencedPage != null)
+    pageReferences.stream().map((pageReference) -> PathParser.parse(pageReference)).map((path) -> thePage.getPageCrawler().getSiblingPage(path)).filter((referencedPage) -> (referencedPage != null)).forEachOrdered((referencedPage) -> {
         pages.add(referencedPage);
-    }
+      });
   }
 }

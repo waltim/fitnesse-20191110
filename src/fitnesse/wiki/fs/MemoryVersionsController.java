@@ -86,9 +86,9 @@ public class MemoryVersionsController implements VersionsController {
 
     public Collection<VersionInfo> history() {
       Collection<VersionInfo> set = new LinkedList<>();
-      for (Map.Entry<String, FileVersion[]> entry : versions.entrySet()) {
-        set.add(makeVersionInfo(entry.getValue()[0], entry.getKey()));
-      }
+      versions.entrySet().forEach((entry) -> {
+          set.add(makeVersionInfo(entry.getValue()[0], entry.getKey()));
+        });
       return set;
     }
 

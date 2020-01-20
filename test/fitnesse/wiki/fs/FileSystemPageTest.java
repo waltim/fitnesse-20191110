@@ -94,11 +94,10 @@ public class FileSystemPageTest {
     fileSystem.makeDirectory(new File("root", "someOther.SubDir"));
     List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
-    for (WikiPage child : children) {
-      String name = child.getName();
-      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "c".equals(name);
-      assertTrue("WikiPAge is not a valid one: " + name, isOk);
-    }
+    children.stream().map((child) -> child.getName()).forEachOrdered((name) -> {
+        boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "c".equals(name);
+        assertTrue("WikiPAge is not a valid one: " + name, isOk);
+      });
   }
 
   @Test

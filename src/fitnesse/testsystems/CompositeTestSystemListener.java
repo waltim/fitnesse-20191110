@@ -21,43 +21,50 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   @Override
   public void testSystemStarted(final TestSystem testSystem) {
-    for (TestSystemListener listener : listeners)
-      listener.testSystemStarted(testSystem);
+      listeners.forEach((listener) -> {
+          listener.testSystemStarted(testSystem);
+      });
   }
 
   @Override
   public void testOutputChunk(final String output) {
-    for (TestSystemListener listener : listeners)
-      listener.testOutputChunk(output);
+      listeners.forEach((listener) -> {
+          listener.testOutputChunk(output);
+      });
   }
 
   @Override
   public void testStarted(final TestPage testPage) {
-    for (TestSystemListener listener : listeners)
-      listener.testStarted(testPage);
+      listeners.forEach((listener) -> {
+          listener.testStarted(testPage);
+      });
   }
 
   @Override
   public void testComplete(final TestPage testPage, final TestSummary testSummary) {
-    for (TestSystemListener listener : listeners)
-      listener.testComplete(testPage, testSummary);
+      listeners.forEach((listener) -> {
+          listener.testComplete(testPage, testSummary);
+      });
   }
 
   @Override
   public void testSystemStopped(final TestSystem testSystem, final Throwable cause) {
-    for (TestSystemListener listener : listeners)
-      listener.testSystemStopped(testSystem, cause);
+      listeners.forEach((listener) -> {
+          listener.testSystemStopped(testSystem, cause);
+      });
   }
 
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    for (TestSystemListener listener : listeners)
-      listener.testAssertionVerified(assertion, testResult);
+      listeners.forEach((listener) -> {
+          listener.testAssertionVerified(assertion, testResult);
+      });
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    for (TestSystemListener listener : listeners)
-      listener.testExceptionOccurred(assertion, exceptionResult);
+      listeners.forEach((listener) -> {
+          listener.testExceptionOccurred(assertion, exceptionResult);
+      });
   }
 }

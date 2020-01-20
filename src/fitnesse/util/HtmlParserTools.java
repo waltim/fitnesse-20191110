@@ -96,9 +96,9 @@ public final class HtmlParserTools {
 
   private static Vector cloneAttributes(Vector<Attribute> attributes) {
     Vector<Attribute> newAttributes = new Vector<>(attributes.size());
-    for (Attribute a : attributes) {
-      newAttributes.add(new Attribute(a.getName(), a.getAssignment(), a.getValue(), a.getQuote()));
-    }
+    attributes.forEach((a) -> {
+        newAttributes.add(new Attribute(a.getName(), a.getAssignment(), a.getValue(), a.getQuote()));
+      });
     return newAttributes;
   }
 

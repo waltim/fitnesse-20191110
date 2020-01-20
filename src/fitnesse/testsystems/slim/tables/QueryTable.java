@@ -154,9 +154,9 @@ public class QueryTable extends SlimTable {
   }
 
   protected void markMissingRows(List<Integer> missingRows) {
-    for (int missingRow : missingRows) {
-      markMissingRow(missingRow);
-    }
+      missingRows.forEach((missingRow) -> {
+          markMissingRow(missingRow);
+      });
   }
 
   protected void markMissingRow(int missingRow) {
@@ -167,14 +167,13 @@ public class QueryTable extends SlimTable {
   }
 
   protected void markSurplusRows(final QueryResults queryResults, List<Integer> unmatchedRows) {
-    for (int unmatchedRow : unmatchedRows) {
-      List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
-      int newTableRow = table.addRow(surplusRow);
-      SlimTestResult testResult = SlimTestResult.fail(surplusRow.get(0), null, "surplus");
-      table.updateContent(0, newTableRow, testResult);
-      getTestContext().increment(ExecutionResult.FAIL);
-      markMissingFields(surplusRow, newTableRow);
-    }
+      unmatchedRows.stream().map((unmatchedRow) -> queryResults.getList(fieldNames, unmatchedRow)).forEachOrdered((surplusRow) -> {
+          int newTableRow = table.addRow(surplusRow);
+          SlimTestResult testResult = SlimTestResult.fail(surplusRow.get(0), null, "surplus");
+          table.updateContent(0, newTableRow, testResult);
+          getTestContext().increment(ExecutionResult.FAIL);
+          markMissingFields(surplusRow, newTableRow);
+      });
   }
 
   private void markMissingFields(List<String> surplusRow, int newTableRow) {
@@ -262,8 +261,9 @@ public class QueryTable extends SlimTable {
 
     public List<String> getList(List<String> fieldNames, int row) {
       List<String> result = new ArrayList<>();
-      for (String name : fieldNames)
-        result.add(rows.get(row).get(name));
+      fieldNames.forEach((name) -> {
+          result.add(rows.get(row).get(name));
+        });
 
       return result;
     }
@@ -286,11 +286,9 @@ public class QueryTable extends SlimTable {
       public Collection<MatchedResult> scoreMatches(int tableRow) {
         Collection<MatchedResult> result = new ArrayList<>();
 
-        for (QueryResultRow row : rows) {
-          MatchedResult match = scoreMatch(table, tableRow, row);
-          if (match.score > 0)
+        rows.stream().map((row) -> scoreMatch(table, tableRow, row)).filter((match) -> (match.score > 0)).forEachOrdered((match) -> {
             result.add(match);
-        }
+          });
 
         return result;
       }
@@ -328,11 +326,11 @@ public class QueryTable extends SlimTable {
       public QueryResultRow(int index, List<List<Object>> values) {
         this.index = index;
         Map<String, String> rowMap = new HashMap<>();
-        for (List<Object> columnPair : values) {
-          String fieldName = (String) columnPair.get(0);
-          String fieldValue = (String) columnPair.get(1);
-          rowMap.put(fieldName, fieldValue);
-        }
+        values.forEach((columnPair) -> {
+            String fieldName = (String) columnPair.get(0);
+            String fieldValue = (String) columnPair.get(1);
+            rowMap.put(fieldName, fieldValue);
+          });
         this.values = rowMap;
       }
 
@@ -354,12 +352,7 @@ public class QueryTable extends SlimTable {
     }
 
     public static java.util.Comparator<MatchedResult> compareByScore() {
-      return new java.util.Comparator<MatchedResult>() {
-        @Override
-        public int compare(MatchedResult o1, MatchedResult o2) {
-          return o2.score - o1.score;
-        }
-      };
+      return (MatchedResult o1, MatchedResult o2) -> o2.score - o1.score;
     }
   }
 }

@@ -251,11 +251,12 @@ public class ZipFileVersionsController implements VersionsController {
     if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
-      for (VersionInfo version : versionsList) {
-        Date thisDate = version.getCreationTime();
-        if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
-          ((ZipFileVersionInfo) version).getFile().delete();
-      }
+      versionsList.forEach((version) -> {
+          Date thisDate = version.getCreationTime();
+            if (thisDate.before(expirationDate) || thisDate.equals(expirationDate)) {
+                ((ZipFileVersionInfo) version).getFile().delete();
+            }
+        });
     }
   }
 

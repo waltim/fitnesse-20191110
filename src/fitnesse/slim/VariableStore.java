@@ -57,8 +57,9 @@ public class VariableStore {
 
   private List<Object> replaceSymbolsInList(List<Object> objects) {
     List<Object> result = new ArrayList<>();
-    for (Object object : objects)
-      result.add(replaceSymbol(object));
+    objects.forEach((object) -> {
+        result.add(replaceSymbol(object));
+      });
 
     return result;
   }

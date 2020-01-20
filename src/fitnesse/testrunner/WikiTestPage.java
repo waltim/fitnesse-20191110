@@ -151,9 +151,9 @@ public class WikiTestPage implements TestPage {
         decoratedContent.append("\n");
       }
 
-      for (WikiPage page : pages) {
-        includePage.accept(page, decoratedContent);
-      }
+      pages.forEach((page) -> {
+          includePage.accept(page, decoratedContent);
+        });
 
       if (multiplePages) {
         decoratedContent.append("*!\n");

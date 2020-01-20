@@ -139,10 +139,12 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
       childTagWasMade = false;
       lastMadeChildWasNotTag = false;
       firstElement = true;
-      for (HtmlElement element : childTags) {
-        children.append(makeChildFromElement(element));
-        firstElement = false;
-      }
+      childTags.stream().map((element) -> {
+          children.append(makeChildFromElement(element));
+            return element;
+        }).forEachOrdered((_item) -> {
+            firstElement = false;
+        });
       return children.toString();
     }
 
@@ -175,9 +177,9 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
 
     private String makeAttributes() {
       StringBuilder attributes = new StringBuilder();
-      for (Attribute attribute : HtmlTag.this.attributes) {
-        attributes.append(" ").append(attribute.name).append("=\"").append(attribute.value).append("\"");
-      }
+      HtmlTag.this.attributes.forEach((attribute) -> {
+          attributes.append(" ").append(attribute.name).append("=\"").append(attribute.value).append("\"");
+        });
       return attributes.toString();
     }
 

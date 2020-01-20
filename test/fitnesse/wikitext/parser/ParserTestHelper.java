@@ -164,7 +164,9 @@ public class ParserTestHelper {
   public static String serializeContent(Symbol symbol) {
     StringBuilder result = new StringBuilder();
     if (symbol.getContent() != null) result.append(symbol.getContent());
-    for (Symbol child : symbol.getChildren()) result.append(serializeContent(child));
+    symbol.getChildren().forEach((child) -> {
+        result.append(serializeContent(child));
+      });
     return result.toString();
   }
 

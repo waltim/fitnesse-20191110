@@ -90,13 +90,10 @@ public class PageCrawler {
 
   public WikiPage getClosestInheritedPage(final String pageName) {
     final WikiPage[] foundPage = new WikiPage[1];
-    traversePageAndAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage page) {
+    traversePageAndAncestors((WikiPage page) -> {
         WikiPage namedPage = page.getChildPage(pageName);
         if (namedPage != null && foundPage[0] == null)
-          foundPage[0] = namedPage;
-      }
+            foundPage[0] = namedPage;
     });
     return foundPage[0];
   }
@@ -121,9 +118,9 @@ public class PageCrawler {
     if(pruningStrategy.skipPageAndChildren(page)){ return; }
 
     listener.process(page);
-    for (WikiPage wikiPage : page.getChildren()) {
-      traverse(wikiPage, listener, pruningStrategy);
-    }
+    page.getChildren().forEach((wikiPage) -> {
+        traverse(wikiPage, listener, pruningStrategy);
+      });
   }
 
   /*
@@ -164,13 +161,10 @@ public class PageCrawler {
   }
 
   public void traverseUncles(final String uncleName, final TraversalListener<? super WikiPage> callback) {
-    traversePageAndAncestors(new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage page) {
+    traversePageAndAncestors((WikiPage page) -> {
         WikiPage namedPage = page.getChildPage(uncleName);
         if (namedPage != null)
-          callback.process(namedPage);
-      }
+            callback.process(namedPage);
     });
   }
 

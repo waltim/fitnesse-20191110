@@ -46,12 +46,12 @@ public class SavePropertiesResponder implements SecureResponder {
     attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
     attrs.add(PageData.PropertyPRUNE);
 
-    for (String attribute : attrs) {
-      if (isChecked(request, attribute))
-        data.setAttribute(attribute);
-      else
-        data.removeAttribute(attribute);
-    }
+    attrs.forEach((attribute) -> {
+        if (isChecked(request, attribute))
+            data.setAttribute(attribute);
+        else
+            data.removeAttribute(attribute);
+      });
 
     String suites = request.getInput("Suites");
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
@@ -70,10 +70,9 @@ public class SavePropertiesResponder implements SecureResponder {
     types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
     data.setAttribute(pageType);
 
-    for (String type : types) {
-      if (!pageType.equals(type))
+    types.stream().filter((type) -> (!pageType.equals(type))).forEachOrdered((type) -> {
         data.removeAttribute(type);
-    }
+      });
   }
 
   private String getPageType(Request request) {

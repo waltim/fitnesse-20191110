@@ -59,15 +59,14 @@ public class MemoryFileSystem implements FileSystem {
   public String[] list(File file) {
     String path = file.getPath();
     Collection<String> result = new ArrayList<>();
-    for (String filePath: files.keySet()) {
-      if (!filePath.startsWith(path)) continue;
-      if (filePath.equals(path)) continue;
-      String rest = filePath.substring(path.length() + 1);
-      int size = rest.indexOf(File.separator);
-      if (size < 0) size = rest.length();
-      String newPath = rest.substring(0, size);
-      if (!StringUtils.isBlank(newPath) && !result.contains(newPath)) result.add(newPath);
-    }
+    files.keySet().stream().filter((filePath) -> !(!filePath.startsWith(path))).filter((filePath) -> !(filePath.equals(path))).map((filePath) -> filePath.substring(path.length() + 1)).map((rest) -> {
+        int size = rest.indexOf(File.separator);
+        if (size < 0) size = rest.length();
+        String newPath = rest.substring(0, size);
+          return newPath;
+      }).filter((newPath) -> (!StringUtils.isBlank(newPath) && !result.contains(newPath))).forEachOrdered((newPath) -> {
+          result.add(newPath);
+      });
     return result.toArray(new String[result.size()]);
   }
 

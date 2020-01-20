@@ -116,10 +116,12 @@ public class Headings extends SymbolType implements Rule, Translation {
     }
 
     HtmlElement htmlElements() {
-      for (final Symbol headerLine : headerLines) {
-        processed = false;
-        htmlElements(headerLine);
-      }
+        headerLines.stream().map((headerLine) -> {
+            processed = false;
+            return headerLine;
+        }).forEachOrdered((headerLine) -> {
+            htmlElements(headerLine);
+        });
       return rootElement;
     }
 
@@ -184,9 +186,9 @@ public class Headings extends SymbolType implements Rule, Translation {
     }
 
     void parse() {
-      for (final Symbol option : body.getChildren()) {
-        handleSymbol(option);
-      }
+        body.getChildren().forEach((option) -> {
+            handleSymbol(option);
+        });
       finishSymbols();
     }
 

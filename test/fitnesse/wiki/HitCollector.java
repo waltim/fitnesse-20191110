@@ -21,9 +21,11 @@ public class HitCollector implements TraversalListener<WikiPage> {
     assertEquals(pageNames.length, hits.size());
 
     List<String> pageNameList = new ArrayList<>(Arrays.asList(pageNames));
-    for (WikiPage page: hits) {
-      assertTrue(pageNameList.contains(page.getName()));
-      pageNameList.remove(page.getName()); // to correctly assert multiple entries with the same name
-    }
+    hits.stream().map((page) -> {
+        assertTrue(pageNameList.contains(page.getName()));
+          return page;
+      }).forEachOrdered((page) -> {
+          pageNameList.remove(page.getName()); // to correctly assert multiple entries with the same name
+      });
   }
 }

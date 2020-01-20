@@ -23,30 +23,34 @@ public class PageListSetUpTearDownInserter implements PageListSetUpTearDownProce
 
     Map<WikiPage, List<WikiPage>> tearDownAfter = findPagesBeforeTearDown(pageList);
     Set<WikiPage> setupsAdded = new HashSet<>();
-    for (WikiPage page : pageList) {
-      addSetUpIfNeeded(pagesToRun, setupsAdded, page);
-      pagesToRun.add(page);
-      addTearDownIfPossible(pagesToRun, tearDownAfter, page);
-    }
+    pageList.stream().map((page) -> {
+        addSetUpIfNeeded(pagesToRun, setupsAdded, page);
+          return page;
+      }).map((page) -> {
+          pagesToRun.add(page);
+          return page;
+      }).forEachOrdered((page) -> {
+          addTearDownIfPossible(pagesToRun, tearDownAfter, page);
+      });
 
     return pagesToRun;
   }
 
   private Map<WikiPage, List<WikiPage>> findPagesBeforeTearDown(List<WikiPage> pages) {
     Map<WikiPage, WikiPage> pageBeforeSuiteTearDown = new LinkedHashMap<>();
-    for (WikiPage page : pages) {
-      page.getPageCrawler()
-        .traverseUncles(SUITE_TEARDOWN_NAME, suiteTearDown -> {
-          pageBeforeSuiteTearDown.remove(suiteTearDown);
-          pageBeforeSuiteTearDown.put(suiteTearDown, page);
-        });
-    }
+    pages.forEach((page) -> {
+        page.getPageCrawler()
+                .traverseUncles(SUITE_TEARDOWN_NAME, suiteTearDown -> {
+                    pageBeforeSuiteTearDown.remove(suiteTearDown);
+                    pageBeforeSuiteTearDown.put(suiteTearDown, page);
+                });
+      });
     Map<WikiPage, List<WikiPage>> tearDownAfter = new IdentityHashMap<>();
-    for (Map.Entry<WikiPage, WikiPage> entry : pageBeforeSuiteTearDown.entrySet()) {
-      WikiPage normalPage = entry.getValue();
-      WikiPage tearDownToRun = entry.getKey();
-      tearDownAfter.computeIfAbsent(normalPage, p -> new ArrayList<>()).add(tearDownToRun);
-    }
+    pageBeforeSuiteTearDown.entrySet().forEach((entry) -> {
+        WikiPage normalPage = entry.getValue();
+        WikiPage tearDownToRun = entry.getKey();
+        tearDownAfter.computeIfAbsent(normalPage, p -> new ArrayList<>()).add(tearDownToRun);
+      });
     return tearDownAfter;
   }
 

@@ -36,16 +36,13 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private Comparator<Date> reverseChronologicalDateComparator() {
-    return new Comparator<Date>() {
-      @Override
-      public int compare(Date d1, Date d2) {
+    return (Date d1, Date d2) -> {
         long diff = d2.getTime() - d1.getTime();
         if (diff < 0)
-          return -1;
+            return -1;
         if (diff > 0)
-          return 1;
+            return 1;
         return 0;
-      }
     };
   }
 
@@ -243,9 +240,9 @@ public class PageHistory extends PageHistoryReader{
 
     public String testString() {
       StringBuilder builder = new StringBuilder();
-      for (PassFailReport report : passFailList) {
-        builder.append(report.isPass() ? "+" : "-");
-      }
+      passFailList.forEach((report) -> {
+          builder.append(report.isPass() ? "+" : "-");
+        });
       return builder.toString();
     }
   }

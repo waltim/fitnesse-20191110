@@ -49,19 +49,17 @@ public class SlimAssertion implements Assertion {
    */
   public static List<Instruction> getInstructions(List<SlimAssertion> assertions) {
     List<Instruction> instructions = new ArrayList<>(assertions.size());
-    for (SlimAssertion a : assertions) {
-      if (a.instruction != Instruction.NOOP_INSTRUCTION) {
+    assertions.stream().filter((a) -> (a.instruction != Instruction.NOOP_INSTRUCTION)).forEachOrdered((a) -> {
         instructions.add(a.instruction);
-      }
-    }
+      });
     return instructions;
   }
 
   public static void evaluateExpectations(List<SlimAssertion> assertions, Map<String, Object> results) {
-    for (SlimAssertion a : assertions) {
-      Object returnValue = results.get(a.getInstruction().getId());
-      a.getExpectation().evaluateExpectation(returnValue);
-    }
+      assertions.forEach((a) -> {
+          Object returnValue = results.get(a.getInstruction().getId());
+          a.getExpectation().evaluateExpectation(returnValue);
+      });
   }
 
 

@@ -102,10 +102,10 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     List<String> keys = new ArrayList<>(keySet());
     Collections.sort(keys);
 
-    for (String key : keys) {
-      WikiPageProperty childProperty = getProperty(key);
-      toXml(childProperty, key, document, root);
-    }
+    keys.forEach((key) -> {
+        WikiPageProperty childProperty = getProperty(key);
+        toXml(childProperty, key, document, root);
+      });
 
     return root;
   }
@@ -119,14 +119,14 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         element.setAttribute("value", value);
 
       Set<String> childKeys = context.keySet();
-      for (String childKeyAsString : childKeys) {
-        WikiPageProperty child = context.getProperty(childKeyAsString);
-        if (child == null) {
-          LOG.warning("Property key \"" + childKeyAsString + "\" has null value for {" + context + "}");
-        } else {
-          toXml(child, childKeyAsString, document, element);
-        }
-      }
+      childKeys.forEach((childKeyAsString) -> {
+          WikiPageProperty child = context.getProperty(childKeyAsString);
+          if (child == null) {
+              LOG.warning("Property key \"" + childKeyAsString + "\" has null value for {" + context + "}");
+          } else {
+              toXml(child, childKeyAsString, document, element);
+          }
+        });
     } else if (value != null)
       element.appendChild(document.createTextNode(value));
 

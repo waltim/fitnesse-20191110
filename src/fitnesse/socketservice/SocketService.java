@@ -26,13 +26,7 @@ public class SocketService {
     this.server = server;
     this.serverSocket = serverSocket;
     serviceThread = new Thread(
-      new Runnable() {
-        @Override
-        public void run() {
-          serviceThread();
-        }
-      }
-    );
+      this::serviceThread);
     serviceThread.setDaemon(daemon);
     serviceThread.start();
   }

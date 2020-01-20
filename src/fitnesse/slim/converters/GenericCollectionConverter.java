@@ -30,9 +30,9 @@ public class GenericCollectionConverter<T, C extends Collection<T>> extends Conv
   public String getString(C collection) {
     int size = collection.size();
     List<String> ret = new ArrayList<>(size);
-    for (T item : collection) {
-      ret.add(getElementString(item));
-    }
+    collection.forEach((item) -> {
+        ret.add(getElementString(item));
+      });
     return ListConverterHelper.toString(ret);
   }
 

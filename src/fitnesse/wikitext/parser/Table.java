@@ -52,9 +52,9 @@ public class Table extends SymbolType implements Rule, Translation {
   }
 
   private boolean containsNewLine(Symbol cell) {
-    for (Symbol child : cell.getChildren()) {
-      if (child.isType(SymbolType.Newline)) return true;
-    }
+      if (cell.getChildren().stream().anyMatch((child) -> (child.isType(SymbolType.Newline)))) {
+          return true;
+      }
     return false;
   }
 

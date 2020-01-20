@@ -29,9 +29,9 @@ public class SymbolUtil {
     if (preorder) {
       addToSymbolsIfIsOfType(symbols, syntaxTree, type);
     }
-    for (Symbol subTree : syntaxTree.getChildren()) {
-      symbols.addAll(findSymbolsByType(subTree, type, preorder));
-    }
+    syntaxTree.getChildren().forEach((subTree) -> {
+        symbols.addAll(findSymbolsByType(subTree, type, preorder));
+      });
     if (!preorder) {
       addToSymbolsIfIsOfType(symbols, syntaxTree, type);
     }
