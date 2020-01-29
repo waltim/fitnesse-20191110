@@ -105,19 +105,9 @@ public class WikiContentUpdater implements Updater {
 
   List<Update> makeAllUpdates() throws IOException {
     List<Update> updates = new ArrayList<>();
-    updates.addAll(addAllFilesToBeUpdated("updateList", new UpdateFactory() {
-      @Override
-      public Update create(String source, File destination) {
-        return new ReplacingFileUpdate(source, destination);
-      }
-    }));
+    updates.addAll(addAllFilesToBeUpdated("updateList", (source, destination) -> new ReplacingFileUpdate(source, destination)));
 
-    updates.addAll(addAllFilesToBeUpdated("updateDoNotCopyOverList", new UpdateFactory() {
-      @Override
-      public Update create(String source, File destination) {
-        return new FileUpdate(source, destination);
-      }
-    }));
+    updates.addAll(addAllFilesToBeUpdated("updateDoNotCopyOverList", (source, destination) -> new FileUpdate(source, destination)));
     return updates;
   }
 

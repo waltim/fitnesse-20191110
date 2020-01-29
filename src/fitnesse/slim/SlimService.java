@@ -150,15 +150,11 @@ public class SlimService {
   private void acceptMany() throws IOException {
     while (true) {
       final Socket socket = serverSocket.accept();
-      executor.execute(new Runnable() {
-
-        @Override
-        public void run() {
-          try {
-            handle(socket);
-          } catch (IOException e) {
-            throw new SlimError(e);
-          }
+      executor.execute(() -> {
+        try {
+          handle(socket);
+        } catch (IOException e) {
+          throw new SlimError(e);
         }
       });
     }

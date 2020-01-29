@@ -66,35 +66,22 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
 
   @Override
   public void create(final String instanceName, final String className, final Object... constructorArgs) throws SlimException {
-    Future<?> submit = service.submit(new Callable<Boolean>() {
-      @Override
-      public Boolean call() throws Exception {
-        inner.create(instanceName, className, constructorArgs);
-        return true;
-      }
+    Future<?> submit = service.submit(() -> {
+      inner.create(instanceName, className, constructorArgs);
+      return true;
     });
     getWithTimeout(submit);
   }
 
   @Override
   public Object callAndAssign(final String symbolName, final String instanceName, final String methodsName, final Object... arguments) throws SlimException {
-    Future<Object> submit = service.submit(new Callable<Object>() {
-      @Override
-      public Object call() throws Exception {
-        return inner.callAndAssign(symbolName, instanceName, methodsName, arguments);
-      }
-    });
+    Future<Object> submit = service.submit(() -> inner.callAndAssign(symbolName, instanceName, methodsName, arguments));
     return getWithTimeout(submit);
   }
 
   @Override
   public Object call(final String instanceName, final String methodName, final Object... arguments) throws SlimException {
-    Future<Object> submit = service.submit(new Callable<Object>() {
-      @Override
-      public Object call() throws Exception {
-        return inner.call(instanceName, methodName, arguments);
-      }
-    });
+    Future<Object> submit = service.submit(() -> inner.call(instanceName, methodName, arguments));
     return getWithTimeout(submit);
   }
 

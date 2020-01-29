@@ -15,14 +15,11 @@ public class TemplateUtil {
 
   public static List<String> getTemplatesFromUncles(WikiPage page) {
     final List<String> templatePaths = new ArrayList<>();
-    page.getPageCrawler().traverseUncles("TemplateLibrary", new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage uncle) {
-        for (WikiPage template : uncle.getChildren()) {
-          WikiPagePath templatePath = new WikiPagePath(template);
-          templatePath.makeAbsolute();
-          templatePaths.add(PathParser.render(templatePath));
-        }
+    page.getPageCrawler().traverseUncles("TemplateLibrary", uncle -> {
+      for (WikiPage template : uncle.getChildren()) {
+        WikiPagePath templatePath = new WikiPagePath(template);
+        templatePath.makeAbsolute();
+        templatePaths.add(PathParser.render(templatePath));
       }
     });
     return templatePaths;

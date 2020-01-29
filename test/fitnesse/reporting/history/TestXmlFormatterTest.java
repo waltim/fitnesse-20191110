@@ -124,13 +124,10 @@ public class TestXmlFormatterTest {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage page = new WikiPageDummy("name", "content", null);
     final LinkedList<StringWriter> writers = new LinkedList<>();
-    TestXmlFormatter formatter = new TestXmlFormatter(context, page, new WriterFactory() {
-      @Override
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-        StringWriter w = new StringWriter();
-        writers.add(w);
-        return w;
-      }
+    TestXmlFormatter formatter = new TestXmlFormatter(context, page, (context1, page1, counts, time) -> {
+      StringWriter w = new StringWriter();
+      writers.add(w);
+      return w;
     });
 
     WikiTestPage testPage = new WikiTestPage(page);
@@ -171,34 +168,21 @@ public class TestXmlFormatterTest {
   @Test
   public void executionReportExceptionsAreThreadSafe() throws IOException {
     final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
-    testThreadSaveOperation(formatter, new Runnable() {
-      @Override
-      public void run() {
-        formatter.exceptionOccurred(new Exception("foo"));
-      }
-    });
+    testThreadSaveOperation(formatter, () -> formatter.exceptionOccurred(new Exception("foo")));
   }
 
   @Test
   public void executionReportResultsAreThreadSafe() throws IOException {
     final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
-    testThreadSaveOperation(formatter, new Runnable() {
-      @Override
-      public void run() {
-        formatter.testStarted(new WikiTestPage(new WikiPageDummy("name", "content", null)));
-      }
-    });
+    testThreadSaveOperation(formatter, () -> formatter.testStarted(new WikiTestPage(new WikiPageDummy("name", "content", null))));
   }
 
   private void testThreadSaveOperation(TestXmlFormatter formatter, final Runnable target) throws IOException {
     final boolean[] sentinel = { true };
-    Thread dataInjector = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (sentinel[0]) {
-          target.run();
-          Thread.yield();
-        }
+    Thread dataInjector = new Thread(() -> {
+      while (sentinel[0]) {
+        target.run();
+        Thread.yield();
       }
     });
 
@@ -213,12 +197,7 @@ public class TestXmlFormatterTest {
   }
 
   private TestXmlFormatter getTestXmlFormatterWithDummyWriter() {
-    return new TestXmlFormatter(context, new WikiPageDummy("name", "content", null), new WriterFactory() {
-      @Override
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-        return new StringWriter();
-      }
-    });
+    return new TestXmlFormatter(context, new WikiPageDummy("name", "content", null), (context, page, counts, time) -> new StringWriter());
   }
 
 }

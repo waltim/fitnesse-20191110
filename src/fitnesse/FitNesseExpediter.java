@@ -90,12 +90,9 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     Response response;
     try {
       try {
-        executorService.submit(new Callable<Request>() {
-          @Override
-          public Request call() throws Exception {
-            request.parse();
-            return request;
-          }
+        executorService.submit(() -> {
+          request.parse();
+          return request;
         }).get(requestParsingTimeLimit, TimeUnit.MILLISECONDS);
       } catch (ExecutionException e) {
         if (e.getCause() instanceof Exception) {

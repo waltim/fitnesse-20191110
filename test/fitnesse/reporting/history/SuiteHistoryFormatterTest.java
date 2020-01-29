@@ -44,13 +44,10 @@ public class SuiteHistoryFormatterTest {
     WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
     testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
     writers = new LinkedList<>();
-    formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
-      @Override
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-        StringWriter w = new StringWriter();
-        writers.add(w);
-        return w;
-      }
+    formatter = new SuiteHistoryFormatter(context, suitePage, (context1, page, counts, time) -> {
+      StringWriter w = new StringWriter();
+      writers.add(w);
+      return w;
     });
   }
 
